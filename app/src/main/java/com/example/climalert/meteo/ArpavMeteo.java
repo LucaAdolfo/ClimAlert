@@ -18,15 +18,10 @@ import okhttp3.*;
 *
 * */
 
-interface MeteoCallback{
-    void OnSuccess(String response);
-    void OnFailure(String message, Exception e);
-}
-
 
 public class ArpavMeteo {
     private static final String BASE_URL ="https://www.arpa.veneto.it/risorse/data-bollettini/meteo/bollettini/it/xml/bollettino_utenti.xml";
-    public void fetchData(MeteoCallback callback) throws IOException {
+    public void fetchData(MeteoCallback callback) {
         //Istanzio quello che fa call
         OkHttpClient client = new OkHttpClient();
         //Ora creo la request
@@ -38,15 +33,14 @@ public class ArpavMeteo {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("ArpavMeteo", "Errore durante la richiesta: " + e.getMessage());
-                callback.OnFailure("Errore di connessione",null);
-                return;
+                callback.OnFailure("Errore di connessione", e);
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful()){ // Questo significa che la risposta c'è stata (cioè si è connesso) e il response code è positivo
                     Log.e("ArpavMeteo", "Server ha risposto ma con codice negativo: "+response.code());
-                    callback.OnFailure("Risposta negativa dal server",null);
+                    callback.OnFailure("Risposta negativa dal server", new IOException("Unexpected code " + response));
                     return;
                 }
                 String responseBody = response.body().string();
