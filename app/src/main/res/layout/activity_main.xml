@@ -30,4 +30,14 @@
         app:layout_constraintHorizontal_bias="0.264"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/meteoArpav"
+        android:layout_width="172dp"
+        android:layout_height="129dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
