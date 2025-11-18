@@ -23,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Scrivi da qui in poi
 
-        textArpav = findViewById(R.id.meteoArpav);
+
+
+        textArpav = findViewById(R.id.meteoArpav); //VA FATTO PARSING
         textArpav.setText("Arpav");
 
         ArpavMeteo meteo = new ArpavMeteo();
@@ -46,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
 
 
 
