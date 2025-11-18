@@ -45,7 +45,7 @@ dependencies {
     /*
     * Qua si aggiungono nostri import
     *
-    * -----
+    *
     * */
 
     implementation("com.squareup.okhttp3:okhttp:5.3.0")
