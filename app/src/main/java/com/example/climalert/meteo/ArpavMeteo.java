@@ -7,6 +7,9 @@ import java.io.IOException;
 
 import okhttp3.*;
 
+
+import com.example.climalert.meteo.MeteoCallback;
+
 /*
 * Lo scopo è quello di estrarre e parsare direttamente qua tutti i file
 * Estraggo dal sito dell arpav con okhttp e poi parso

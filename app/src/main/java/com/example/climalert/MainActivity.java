@@ -1,6 +1,9 @@
 package com.example.climalert;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -45,9 +48,19 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             });
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        Button bottoneMappa = findViewById(R.id.mappa);
+        bottoneMappa.setOnClickListener(view -> {
+                Log.d("bottone", "bottone premuto");
+                Intent intent = new Intent(this, MappaActivity.class);
+                startActivity(intent);
+                startActivity(intent);
+
+
+
+                });
 
 
 

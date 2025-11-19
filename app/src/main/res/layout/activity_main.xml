@@ -21,13 +21,13 @@
 
     <Switch
         android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_width="197dp"
+        android:layout_height="112dp"
+        android:layout_marginBottom="176dp"
         android:text="Inutile1"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.264"
+        app:layout_constraintHorizontal_bias="0.747"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
@@ -36,7 +36,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="124dp" />
+        app:layout_constraintBottom_toTopOf="@+id/mappa"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/mappa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mappa"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
