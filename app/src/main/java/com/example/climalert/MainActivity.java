@@ -14,8 +14,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.climalert.meteo.ArpavMeteo;
 import com.example.climalert.meteo.MeteoCallback;
+import com.example.climalert.meteo.parsing.xmlParser;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textArpav;
@@ -36,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
             meteo.fetchData(new MeteoCallback() {
                 @Override
                 public void OnSuccess(String response) {
+                    Log.d("main","dati estratti");
                     runOnUiThread(() -> {
+//                        xmlParser p = new xmlParser();
+//                        Map meteoMap = p.parseXml(response);
+//                        String m = (String) meteoMap.get("data_emissione");
                         textArpav.setText(response);
                     });
                 }
@@ -53,12 +59,9 @@ public class MainActivity extends AppCompatActivity {
         }
         Button bottoneMappa = findViewById(R.id.mappa);
         bottoneMappa.setOnClickListener(view -> {
-                Log.d("bottone", "bottone premuto");
+                Log.d("main", "bottone premuto mappa");
                 Intent intent = new Intent(this, MappaActivity.class);
                 startActivity(intent);
-                startActivity(intent);
-
-
 
                 });
 

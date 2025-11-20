@@ -1,5 +1,6 @@
 package com.example.climalert;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static java.security.AccessController.getContext;
 
 import android.Manifest;
@@ -7,11 +8,14 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -21,6 +25,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
@@ -39,7 +44,9 @@ public class MappaActivity extends AppCompatActivity {
         //Istanzia osm di default
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-
+        map.getController().setZoom(9.5);
+        GeoPoint startPoint = new GeoPoint(45.4408, 12.3155); // Esempio: Venezia
+        map.getController().setCenter(startPoint);
 
         map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
@@ -49,6 +56,8 @@ public class MappaActivity extends AppCompatActivity {
                 // WRITE_EXTERNAL_STORAGE is required in order to show the map
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
+        requestPermissionsIfNecessary(permissions);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -76,17 +85,20 @@ public class MappaActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (int i = 0; i < grantResults.length; i++) {
-            permissionsToRequest.add(permissions[i]);
-        }
-        if (!permissionsToRequest.isEmpty()) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults); // Non dimenticare questa chiamata
+
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
+                // Il primo (e in questo caso unico) permesso è stato concesso.
+                Log.d("MappaActivity", "Permesso concesso dall'utente.");
+                // La mappa dovrebbe funzionare correttamente.
+            } else {
+                // Il permesso è stato negato.
+                Log.w("MappaActivity", "Permesso negato dall'utente.");
+                // Mostra un messaggio per informare l'utente.
+                Log.w("MappaActivity", "Permesso di scrittura negato. La mappa potrebbe non funzionare offline.");
+            }
         }
     }
 
@@ -94,7 +106,7 @@ public class MappaActivity extends AppCompatActivity {
         ArrayList<String> permissionsToRequest = new ArrayList<>();
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission)
-                    != PackageManager.PERMISSION_GRANTED) {
+                    != PERMISSION_GRANTED) {
                 // Permission is not granted
                 permissionsToRequest.add(permission);
             }
@@ -107,5 +119,20 @@ public class MappaActivity extends AppCompatActivity {
         }
     }
 
+//
+//        ArrayList<String> permissionsToRequest = new ArrayList<>();
+//        for (int i = 0; i < grantResults.length; i++) {
+//            permissionsToRequest.add(permissions[i]);
+//        } // -- mette tutti i permessi qua dentro --
+//        if (!permissionsToRequest.isEmpty()) {
+//            ActivityCompat.requestPermissions(
+//                    this,
+//                    permissionsToRequest.toArray(new String[0]),
+//                    REQUEST_PERMISSIONS_REQUEST_CODE);
+//        }
 
-}
+
+
+    }
+
+
