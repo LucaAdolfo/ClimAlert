@@ -6,6 +6,7 @@ import static java.security.AccessController.getContext;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,10 +24,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.internal.maps.zzaj;
+import com.google.android.gms.maps.model.Marker;
+
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
+import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
 import java.util.ArrayList;
 
@@ -34,6 +41,7 @@ public class MappaActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView map = null;
 
+    private GpsMyLocationProvider myLocation = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +52,12 @@ public class MappaActivity extends AppCompatActivity {
         //Istanzia osm di default
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        map.getController().setZoom(9.5);
-        GeoPoint startPoint = new GeoPoint(45.4408, 12.3155); // Esempio: Venezia
-        map.getController().setCenter(startPoint);
 
         map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
+        map.getController().setZoom(9.5);
+        GeoPoint startPoint = new GeoPoint(45.4408, 12.3155); // Esempio: Venezia
+        map.getController().setCenter(startPoint);
         String[] permissions = new String[]{
                 // if you need to show the current location, uncomment the line below
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -58,12 +66,34 @@ public class MappaActivity extends AppCompatActivity {
         };
         requestPermissionsIfNecessary(permissions);
 
+
+        myLocation = new GpsMyLocationProvider(ctx);
+        myLocation.startLocationProvider(new IMyLocationConsumer() {
+            @Override
+            public void onLocationChanged(Location location, IMyLocationProvider source) {
+                if (location != null) {
+                    runOnUiThread(() -> {
+                        GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+
+                        // Centra la mappa sulla posizione dell'utente
+                        map.getController().animateTo(userLocation);
+                        map.getController().setCenter(startPoint);
+                        // Dopo aver trovato la posizione, possiamo smettere di ascoltare per risparmiare batteria
+                        myLocation.stopLocationProvider();
+                    });
+                }
+            }
+
+        }); //TODO Occhio
+
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -71,6 +101,8 @@ public class MappaActivity extends AppCompatActivity {
         //if you make changes to the configuration, use
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+        GeoPoint startPoint = new GeoPoint(45.4408, 12.3155); // Esempio: Venezia
+        map.getController().setCenter(startPoint);
         map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
     }
 
