@@ -5,6 +5,7 @@ import static java.security.AccessController.getContext;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -24,8 +26,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.internal.maps.zzaj;
-import com.google.android.gms.maps.model.Marker;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -34,7 +34,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
-
+import org.osmdroid.views.overlay.Marker;
 import java.util.ArrayList;
 
 public class MappaActivity extends AppCompatActivity {
@@ -56,8 +56,8 @@ public class MappaActivity extends AppCompatActivity {
         map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.getController().setZoom(9.5);
-        GeoPoint startPoint = new GeoPoint(45.4408, 12.3155); // Esempio: Venezia
-        map.getController().setCenter(startPoint);
+        map.setMultiTouchControls(true);
+
         String[] permissions = new String[]{
                 // if you need to show the current location, uncomment the line below
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -77,15 +77,27 @@ public class MappaActivity extends AppCompatActivity {
 
                         // Centra la mappa sulla posizione dell'utente
                         map.getController().animateTo(userLocation);
-                        map.getController().setCenter(startPoint);
                         // Dopo aver trovato la posizione, possiamo smettere di ascoltare per risparmiare batteria
+                        myLocation.stopLocationProvider();
+
+                        Marker userMarker = new Marker(map);
+                        userMarker.setPosition(userLocation);
+                        map.getOverlays().add(userMarker);
+                        userMarker.setTitle("You");
+                        userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                        userMarker.getIcon();
                         myLocation.stopLocationProvider();
                     });
                 }
             }
 
         }); //TODO Occhio
+        Button bottoneBack = findViewById(R.id.Back);
+        bottoneBack.setOnClickListener(view -> {
+            Log.d("mappa", "bottone back premuto");
+            finish(); //Ritorna a activity precedente
 
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -97,23 +109,15 @@ public class MappaActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        GeoPoint startPoint = new GeoPoint(45.4408, 12.3155); // Esempio: Venezia
-        map.getController().setCenter(startPoint);
+
+
         map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().save(this, prefs);
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+        map.onPause();
     }
 
     @Override
@@ -150,19 +154,6 @@ public class MappaActivity extends AppCompatActivity {
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
-
-//
-//        ArrayList<String> permissionsToRequest = new ArrayList<>();
-//        for (int i = 0; i < grantResults.length; i++) {
-//            permissionsToRequest.add(permissions[i]);
-//        } // -- mette tutti i permessi qua dentro --
-//        if (!permissionsToRequest.isEmpty()) {
-//            ActivityCompat.requestPermissions(
-//                    this,
-//                    permissionsToRequest.toArray(new String[0]),
-//                    REQUEST_PERMISSIONS_REQUEST_CODE);
-//        }
-
 
 
     }

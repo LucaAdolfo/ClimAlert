@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -47,6 +48,8 @@ dependencies {
     *
     *
     * */
+    implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
+    implementation("com.google.firebase:firebase-analytics")
 
     implementation("com.squareup.okhttp3:okhttp:5.3.0")
     implementation("org.osmdroid:osmdroid-android:6.1.20")
