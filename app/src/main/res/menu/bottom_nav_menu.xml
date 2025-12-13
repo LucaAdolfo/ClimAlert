@@ -11,7 +11,7 @@
         android:title="Notizie" />
 
     <item
-        android:id="@+id/navigation_AI"
+        android:id="@+id/navigation_ai"
         android:icon="@drawable/ic_ai"
         android:title="AI" />
 </menu>

@@ -15,12 +15,15 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.climalert.meteo.ArpavMeteo;
 import com.example.climalert.meteo.MeteoCallback;
 import com.example.climalert.meteo.parsing.xmlParser;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textArpav;
+    private BottomNavigationView navBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +31,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Scrivi da qui in poi
 
+        //navigazione orizzontale
+        navBar = findViewById(R.id.navBar);
+
+        //cambia activity
+        navBar.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.navigation_home) {
+                //siamo già nella home
+                return true;
+
+            } else if (itemId == R.id.navigation_notizie) {
+                //avvia la NotizieActivity
+                Intent intent = new Intent(MainActivity.this, NotizieActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+
+            } else if (itemId == R.id.navigation_ai) {
+                //avvia la AIActivity
+                Intent intent = new Intent(MainActivity.this, AIActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            }
+
+            //altro id
+            return false;
+        });
 
 
         textArpav = findViewById(R.id.meteoArpav); //VA FATTO PARSING
