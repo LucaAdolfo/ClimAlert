@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.ClimAlert" parent="Base.Theme.ClimAlert" />
+
+    <!--stile per la navBar -->
+    <style name="CustomBottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/CustomBottomNavigationView.Overlay</item>
+    </style>
+
+    <!-- stile per il colore della selezione -->
+    <style name="CustomBottomNavigationView.Overlay" parent="">
+        <item name="colorSecondaryContainer">@color/white</item>
+    </style>
+
 </resources>
