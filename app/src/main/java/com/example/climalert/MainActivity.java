@@ -16,7 +16,6 @@ import com.example.climalert.meteo.ArpavMeteo;
 import com.example.climalert.meteo.MeteoCallback;
 import com.example.climalert.meteo.parsing.xmlParser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.FirebaseApp;
 
 import java.io.IOException;
 import java.util.Map;
@@ -32,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Scrivi da qui in poi
 
-        FirebaseApp.initializeApp(this);
         //navigazione orizzontale
         navBar = findViewById(R.id.navBar);
 
