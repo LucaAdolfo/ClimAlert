@@ -6,7 +6,7 @@ Ricordare di fare pull ogni volta.
 
 
 ---
-- Mancante Parsing previsione meteo.
-- Scelta mappa Opensource  - **OSM** - manca tutta la gestione della mappa
+- Scelta mappa Opensource  - **OSM**
+- Sceltaa db -> Firebase
 
 
