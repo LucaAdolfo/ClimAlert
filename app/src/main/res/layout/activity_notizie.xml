@@ -7,16 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".NotizieActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/headerGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.20" />
+
     <TextView
         android:id="@+id/idTitle"
         android:layout_width="0dp"
-        android:layout_height="147dp"
+        android:layout_height="0dp"
         android:background="@android:color/darker_gray"
         android:gravity="center"
         android:text="NOTIZIE UFFICIALI"
         android:textSize="40sp"
         android:textStyle="bold"
-
+        app:layout_constraintBottom_toTopOf="@id/headerGuideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,4 +38,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
+    <ImageButton
+        android:id="@+id/btnFiltra"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Filtra notizie"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_filter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/idTitle"
+        tools:ignore="MissingConstraints" />
+
+    <SearchView
+        android:id="@+id/searchNotizie"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/search_view_border"
+        android:iconifiedByDefault="false"
+        android:queryHint="Cerca notizie..."
+        app:layout_constraintBottom_toBottomOf="@id/btnFiltra"
+        app:layout_constraintEnd_toStartOf="@id/btnFiltra"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnFiltra" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

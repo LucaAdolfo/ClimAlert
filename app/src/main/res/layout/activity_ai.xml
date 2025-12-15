@@ -7,16 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".AIActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/headerGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.20" />
+
     <TextView
         android:id="@+id/idTitle"
         android:layout_width="0dp"
-        android:layout_height="147dp"
+        android:layout_height="0dp"
         android:background="@android:color/darker_gray"
         android:gravity="center"
         android:text="ClimAI"
         android:textSize="40sp"
         android:textStyle="bold"
-
+        app:layout_constraintBottom_toTopOf="@id/headerGuideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,5 +38,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
+    <ImageButton
+        android:id="@+id/btnInvia"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Invia messaggio"
+        android:src="@android:drawable/ic_menu_send"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@id/messaggioInputLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/messaggioInputLayout" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/messaggioInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:hint="Scrivi un messaggio..."
+        app:layout_constraintBottom_toTopOf="@id/navBar"
+        app:layout_constraintEnd_toStartOf="@+id/btnInvia"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/messaggioEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="5" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

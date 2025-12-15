@@ -7,6 +7,47 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/headerGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.20" />
+
+    <TextView
+        android:id="@+id/idTitle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/darker_gray"
+        android:gravity="center_vertical|start"
+        android:paddingStart="130dp"
+        android:text="Benvenuto"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/headerGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnProfilo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="30dp"
+        android:background="@drawable/profile_button_background"
+        android:contentDescription="Apri Profilo"
+        android:elevation="4dp"
+        android:padding="12dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_profile"
+        app:tint="#000000"
+
+        app:layout_constraintTop_toTopOf="@id/idTitle"
+        app:layout_constraintBottom_toBottomOf="@id/idTitle"
+
+        app:layout_constraintStart_toStartOf="parent" />
+
+
     <Switch
         android:id="@+id/switch1"
         android:layout_width="197dp"
