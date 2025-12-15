@@ -155,19 +155,6 @@ public class MappaActivity extends AppCompatActivity {
         }
     }
 
-//
-//        ArrayList<String> permissionsToRequest = new ArrayList<>();
-//        for (int i = 0; i < grantResults.length; i++) {
-//            permissionsToRequest.add(permissions[i]);
-//        } // -- mette tutti i permessi qua dentro --
-//        if (!permissionsToRequest.isEmpty()) {
-//            ActivityCompat.requestPermissions(
-//                    this,
-//                    permissionsToRequest.toArray(new String[0]),
-//                    REQUEST_PERMISSIONS_REQUEST_CODE);
-//        }
-
-
 
     }
 
