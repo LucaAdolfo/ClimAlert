@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.climalert.meteo.ArpavMeteo;
 import com.example.climalert.meteo.MeteoCallback;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import com.google.firebase.FirebaseApp;
 public class MainActivity extends AppCompatActivity {
     private TextView textArpav;
     private BottomNavigationView navBar;
@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Scrivi da qui in poi
 
+
+        FirebaseApp.initializeApp(this);
         //vedi impostazioni
         btnImpostazioni = findViewById(R.id.btnImpostazioni);
         btnImpostazioni.setOnClickListener(view -> {
