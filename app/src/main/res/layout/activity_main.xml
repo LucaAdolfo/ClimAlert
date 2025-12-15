@@ -30,16 +30,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/btnProfilo"
+        android:id="@+id/btnImpostazioni"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginStart="30dp"
-        android:background="@drawable/profile_button_background"
-        android:contentDescription="Apri Profilo"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/settings_button_background"
+        android:contentDescription="Apri impostazioni"
         android:elevation="4dp"
-        android:padding="12dp"
+        android:padding="8dp"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_profile"
+        app:srcCompat="@drawable/ic_settings"
         app:tint="#000000"
 
         app:layout_constraintTop_toTopOf="@id/idTitle"
@@ -94,17 +94,19 @@
 
     <Button
         android:id="@+id/btnSegnalazione"
-        android:layout_width="342dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="23dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="22dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:text="FAI SEGNALAZIONE"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/navBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navBar"

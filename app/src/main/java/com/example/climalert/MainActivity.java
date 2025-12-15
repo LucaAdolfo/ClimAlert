@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -14,15 +15,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.climalert.meteo.ArpavMeteo;
 import com.example.climalert.meteo.MeteoCallback;
-import com.example.climalert.meteo.parsing.xmlParser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textArpav;
     private BottomNavigationView navBar;
+    private ImageButton btnImpostazioni;
+    private Button btnSegnalazione;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +29,22 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         //Scrivi da qui in poi
+
+        //vedi impostazioni
+        btnImpostazioni = findViewById(R.id.btnImpostazioni);
+        btnImpostazioni.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ImpostazioniActivity.class);
+
+            startActivity(intent);
+        });
+
+        //fai segnalazione
+        btnSegnalazione = findViewById(R.id.btnSegnalazione);
+        btnSegnalazione.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, SegnalazioneActivity.class);
+
+            startActivity(intent);
+        });
 
         //navigazione orizzontale
         navBar = findViewById(R.id.navBar);
