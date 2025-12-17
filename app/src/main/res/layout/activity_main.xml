@@ -48,49 +48,15 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="197dp"
-        android:layout_height="112dp"
-        android:layout_marginBottom="176dp"
-        android:text="Inutile1"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.747"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-    <TextView
-        android:id="@+id/meteoArpav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginBottom="68dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/mappa"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <Button
         android:id="@+id/mappa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mappa"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Che schifo android studio"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.734" />
+        tools:layout_editor_absoluteY="475dp" />
 
     <Button
         android:id="@+id/btnSegnalazione"
@@ -119,5 +85,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
+    <TextView
+        android:id="@+id/previsioniPosizione"
+        android:layout_width="76dp"
+        android:layout_height="29dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="186dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

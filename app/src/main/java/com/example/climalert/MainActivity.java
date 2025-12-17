@@ -15,7 +15,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.climalert.meteo.ArpavMeteo;
 import com.example.climalert.meteo.MeteoCallback;
+import com.example.climalert.meteo.parsing.xmlParser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseApp;
+
+import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textArpav;
@@ -30,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Scrivi da qui in poi
 
+
+        FirebaseApp.initializeApp(this);
         //vedi impostazioni
         btnImpostazioni = findViewById(R.id.btnImpostazioni);
         btnImpostazioni.setOnClickListener(view -> {
@@ -76,9 +83,8 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
+        textArpav = findViewById(R.id.previsioniPosizione);
 
-        textArpav = findViewById(R.id.meteoArpav); //VA FATTO PARSING
-        textArpav.setText("Arpav");
 
         ArpavMeteo meteo = new ArpavMeteo();
         try {
@@ -90,7 +96,30 @@ public class MainActivity extends AppCompatActivity {
 //                        xmlParser p = new xmlParser();
 //                        Map meteoMap = p.parseXml(response);
 //                        String m = (String) meteoMap.get("data_emissione");
-                        textArpav.setText(response);
+                        xmlParser parser = new xmlParser();
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Map valoriMeteo = parser.parseXml(response);
+                                    Log.d("Luca", (String) valoriMeteo.get("data_emissione"));
+
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            }).start();
+
+
+
+
+
+
+                        //textArpav.setText();
+                        //dentro response ci sono i dati dell'arpav
+
+
                     });
                 }
 

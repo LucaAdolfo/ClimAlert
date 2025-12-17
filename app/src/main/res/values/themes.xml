@@ -17,4 +17,12 @@
         <item name="colorSecondaryContainer">@color/white</item>
     </style>
 
+    <!--tema per splash screen-->
+    <style name="Theme.App.SplashScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--status bar trasparente-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--<item name="android:windowBackground">@drawable/splash_background</item>-->
+    </style>
+
+
 </resources>

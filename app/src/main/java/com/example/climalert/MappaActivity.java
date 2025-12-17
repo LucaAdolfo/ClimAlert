@@ -24,9 +24,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.internal.maps.zzaj;
-import com.google.android.gms.maps.model.Marker;
-
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -36,7 +33,7 @@ import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
 import java.util.ArrayList;
-
+import org.osmdroid.views.overlay.Marker;
 public class MappaActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView map = null;
@@ -56,8 +53,7 @@ public class MappaActivity extends AppCompatActivity {
         map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.getController().setZoom(9.5);
-        GeoPoint startPoint = new GeoPoint(45.4408, 12.3155); // Esempio: Venezia
-        map.getController().setCenter(startPoint);
+        map.setMultiTouchControls(true);
         String[] permissions = new String[]{
                 // if you need to show the current location, uncomment the line below
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -77,8 +73,17 @@ public class MappaActivity extends AppCompatActivity {
 
                         // Centra la mappa sulla posizione dell'utente
                         map.getController().animateTo(userLocation);
-                        map.getController().setCenter(startPoint);
+
                         // Dopo aver trovato la posizione, possiamo smettere di ascoltare per risparmiare batteria
+                        myLocation.stopLocationProvider();
+
+
+                        Marker userMarker = new Marker(map);
+                        userMarker.setPosition(userLocation);
+                        map.getOverlays().add(userMarker);
+                        userMarker.setTitle("You");
+                        userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                        userMarker.getIcon();//TODO
                         myLocation.stopLocationProvider();
                     });
                 }
@@ -101,8 +106,7 @@ public class MappaActivity extends AppCompatActivity {
         //if you make changes to the configuration, use
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        GeoPoint startPoint = new GeoPoint(45.4408, 12.3155); // Esempio: Venezia
-        map.getController().setCenter(startPoint);
+
         map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
     }
 
@@ -150,19 +154,6 @@ public class MappaActivity extends AppCompatActivity {
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
-
-//
-//        ArrayList<String> permissionsToRequest = new ArrayList<>();
-//        for (int i = 0; i < grantResults.length; i++) {
-//            permissionsToRequest.add(permissions[i]);
-//        } // -- mette tutti i permessi qua dentro --
-//        if (!permissionsToRequest.isEmpty()) {
-//            ActivityCompat.requestPermissions(
-//                    this,
-//                    permissionsToRequest.toArray(new String[0]),
-//                    REQUEST_PERMISSIONS_REQUEST_CODE);
-//        }
-
 
 
     }
