@@ -56,8 +56,8 @@ public class OnBoardingSliderActivity extends AppCompatActivity {
                 editor.putBoolean("onboarding_completed", true);
                 editor.apply();
 
-                //fine onboarding, vai al main (che sarà accedi poi)
-                Intent intent = new Intent(OnBoardingSliderActivity.this, MainActivity.class);
+                //fine onboarding, vai al main (o accedi)
+                Intent intent = new Intent(OnBoardingSliderActivity.this, AccediActivity.class);
                 startActivity(intent);
                 finish();
             }
