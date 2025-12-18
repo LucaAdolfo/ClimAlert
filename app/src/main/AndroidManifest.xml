@@ -22,6 +22,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClimAlert">
         <activity
+            android:name=".RegistratiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccediActivity"
+            android:exported="false" />
+        <activity
             android:name=".WelcomeActivity"
             android:exported="false" />
         <activity
