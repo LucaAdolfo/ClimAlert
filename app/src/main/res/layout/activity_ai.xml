@@ -60,7 +60,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:hint="Scrivi un messaggio..."
+        app:hintEnabled="false"
         app:layout_constraintBottom_toTopOf="@id/navBar"
         app:layout_constraintEnd_toStartOf="@+id/btnInvia"
         app:layout_constraintStart_toStartOf="parent">
@@ -69,6 +69,7 @@
             android:id="@+id/messaggioEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Scrivi un messaggio..."
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines="5" />
 
