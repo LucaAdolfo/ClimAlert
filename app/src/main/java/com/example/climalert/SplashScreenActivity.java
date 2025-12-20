@@ -26,8 +26,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             Intent intent;
             if (onboardingCompleted) {
-                //se finito, vai a main
-                intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                //se finito, vai a main o accedi
+                intent = new Intent(SplashScreenActivity.this, AccediActivity.class);
             } else {
                 //prima volta, onboarding
                 intent = new Intent(SplashScreenActivity.this, WelcomeActivity.class);
