@@ -17,10 +17,9 @@ import com.example.climalert.meteo.ArpavMeteo;
 import com.example.climalert.meteo.MeteoCallback;
 import com.example.climalert.meteo.parsing.xmlParser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Map;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textArpav;
@@ -28,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btnImpostazioni;
     private Button btnSegnalazione;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,11 +35,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Scrivi da qui in poi
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "main");
+        mFirebaseAnalytics.logEvent("main", bundle);
 
-        FirebaseApp.initializeApp(this);
         //vedi impostazioni
         btnImpostazioni = findViewById(R.id.btnImpostazioni);
         btnImpostazioni.setOnClickListener(view -> {
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Impostazioni");
+            mFirebaseAnalytics.logEvent("click_impostazioni", bundle);
+
             Intent intent = new Intent(MainActivity.this, ImpostazioniActivity.class);
 
             startActivity(intent);
@@ -49,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         btnSegnalazione = findViewById(R.id.btnSegnalazione);
         btnSegnalazione.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, SegnalazioneActivity.class);
+            Bundle segn_bundle = new Bundle();
+            segn_bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Segnalazione");
+            mFirebaseAnalytics.logEvent("click_segnalazione", bundle);
 
             startActivity(intent);
         });
@@ -59,13 +68,15 @@ public class MainActivity extends AppCompatActivity {
         //cambia activity
         navBar.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-
             if (itemId == R.id.navigation_home) {
                 //siamo già nella home
                 return true;
 
             } else if (itemId == R.id.navigation_notizie) {
                 //avvia la NotizieActivity
+                Bundle notizie_bundle = new Bundle();
+                notizie_bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Notizie");
+                mFirebaseAnalytics.logEvent("click_notizie", bundle);
                 Intent intent = new Intent(MainActivity.this, NotizieActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
@@ -73,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
 
             } else if (itemId == R.id.navigation_ai) {
                 //avvia la AIActivity
+                Bundle ai_bundle = new Bundle();
+                ai_bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Ai");
+                mFirebaseAnalytics.logEvent("click_ai", bundle);
+
                 Intent intent = new Intent(MainActivity.this, AIActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
