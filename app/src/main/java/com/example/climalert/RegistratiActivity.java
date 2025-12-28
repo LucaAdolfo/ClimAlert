@@ -61,10 +61,9 @@ public class RegistratiActivity extends AppCompatActivity {
 
 
         edit_email = findViewById(R.id.edit_email);
-        edit_username = findViewById(R.id.edit_username);
         edit_password = findViewById(R.id.edit_password);
         edit_conferma_password = findViewById(R.id.edit_conferma_password);
-
+        edit_username = findViewById(R.id.edit_username);
 
         cbxPrivacy = findViewById(R.id.cbxPrivacy);
 
@@ -81,7 +80,6 @@ public class RegistratiActivity extends AppCompatActivity {
         //informativa
         lblPrivacy = findViewById(R.id.lblPrivacy);
 
-        // 1. Definisci il testo completo e la parte cliccabile
         String fullText = "Ho letto i Termini di Servizio e acconsento al trattamento dei dati.";
         String clickableText = "i Termini di Servizio";
 
@@ -112,9 +110,10 @@ public class RegistratiActivity extends AppCompatActivity {
         btnRegistrati = findViewById(R.id.btnRegistrati);
         btnRegistrati.setOnClickListener(view -> {
             String email = edit_email.getText().toString().trim();
-            String username = edit_username.getText().toString().trim();
             String password = edit_password.getText().toString().trim();
             String confermaPassword = edit_conferma_password.getText().toString();
+            String username = edit_username.getText().toString().trim();
+
             if (!password.equals(confermaPassword)) {
                 Toast.makeText(RegistratiActivity.this, "Le password non corrispondono", Toast.LENGTH_SHORT).show();
                 edit_password.setText("");
@@ -137,7 +136,8 @@ public class RegistratiActivity extends AppCompatActivity {
                 Toast.makeText(RegistratiActivity.this, "Devi accettare i termini di servizio", Toast.LENGTH_SHORT).show();
                 return;
             }
-            registratiEmailPassword(email, password);
+
+            registratiEmailPassword(email,password);
         });
     }
 

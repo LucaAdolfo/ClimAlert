@@ -21,6 +21,7 @@ public class ImpostazioniActivity extends AppCompatActivity {
     private ImageButton btnIndietro;
     private MaterialButton btnDisconnetti;
     private MaterialButton btnElimina;
+    private MaterialButton btnTema, btnProfilo, btnSicurezza, btnPreferenze, btnFaq;
     private FirebaseAuth mAuth;
 
     private static final String TAG = "ImpostazioniActivity";
@@ -35,6 +36,11 @@ public class ImpostazioniActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        btnProfilo = findViewById(R.id.btnInfo);
+        btnSicurezza = findViewById(R.id.btnSicurezza);
+        btnPreferenze = findViewById(R.id.btnPreferenze);
+        btnFaq = findViewById(R.id.btnFaq);
+        btnTema = findViewById(R.id.btnTema);
         btnDisconnetti = findViewById(R.id.btnDisconnetti);
         btnIndietro = findViewById(R.id.btnIndietro);
         btnElimina = findViewById(R.id.btnElimina);
@@ -79,6 +85,30 @@ public class ImpostazioniActivity extends AppCompatActivity {
 
         });
 
+        btnProfilo.setOnClickListener(view -> {
+            Intent intent = new Intent(ImpostazioniActivity.this, ProfiloActivity.class);
+            startActivity(intent);
+        });
+
+        btnSicurezza.setOnClickListener(view -> {
+            Intent intent = new Intent(ImpostazioniActivity.this, SicurezzaActivity.class);
+            startActivity(intent);
+        });
+
+        btnTema.setOnClickListener(view -> {
+            Intent intent = new Intent(ImpostazioniActivity.this, TemaActivity.class);
+            startActivity(intent);
+        });
+
+        btnPreferenze.setOnClickListener(view -> {
+            Intent intent = new Intent(ImpostazioniActivity.this, PreferenzeActivity.class);
+            startActivity(intent);
+        });
+
+        btnFaq.setOnClickListener(view -> {
+            Intent intent = new Intent(ImpostazioniActivity.this, FaqActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void logOutUI() {
