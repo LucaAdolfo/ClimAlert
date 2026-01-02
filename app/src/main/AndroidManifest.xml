@@ -22,6 +22,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClimAlert">
         <activity
+            android:name=".FaqActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PreferenzeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TemaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SicurezzaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfiloActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegistratiActivity"
             android:exported="false" />
         <activity

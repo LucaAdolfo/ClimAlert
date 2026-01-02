@@ -11,6 +11,7 @@ import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,9 +40,11 @@ public class RegistratiActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    private TextView edit_email;
+    private TextView edit_email, edit_username;
     private TextView edit_password;
     private TextView edit_conferma_password;
+    private CheckBox cbxPrivacy;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +63,9 @@ public class RegistratiActivity extends AppCompatActivity {
         edit_email = findViewById(R.id.edit_email);
         edit_password = findViewById(R.id.edit_password);
         edit_conferma_password = findViewById(R.id.edit_conferma_password);
+        edit_username = findViewById(R.id.edit_username);
 
-
+        cbxPrivacy = findViewById(R.id.cbxPrivacy);
 
 
 
@@ -76,7 +80,6 @@ public class RegistratiActivity extends AppCompatActivity {
         //informativa
         lblPrivacy = findViewById(R.id.lblPrivacy);
 
-        // 1. Definisci il testo completo e la parte cliccabile
         String fullText = "Ho letto i Termini di Servizio e acconsento al trattamento dei dati.";
         String clickableText = "i Termini di Servizio";
 
@@ -103,19 +106,21 @@ public class RegistratiActivity extends AppCompatActivity {
         lblPrivacy.setText(spannableString);
         lblPrivacy.setMovementMethod(LinkMovementMethod.getInstance());
 
-        //registrazione (senza logica)
+        //registrazione
         btnRegistrati = findViewById(R.id.btnRegistrati);
         btnRegistrati.setOnClickListener(view -> {
             String email = edit_email.getText().toString().trim();
             String password = edit_password.getText().toString().trim();
             String confermaPassword = edit_conferma_password.getText().toString();
+            String username = edit_username.getText().toString().trim();
+
             if (!password.equals(confermaPassword)) {
                 Toast.makeText(RegistratiActivity.this, "Le password non corrispondono", Toast.LENGTH_SHORT).show();
                 edit_password.setText("");
                 edit_conferma_password.setText("");
                 return;
             }
-            if (email.isEmpty() || password.isEmpty() || confermaPassword.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty() || confermaPassword.isEmpty() || username.isEmpty()) {
                 Toast.makeText(RegistratiActivity.this, "Compila tutti i campi", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -127,6 +132,11 @@ public class RegistratiActivity extends AppCompatActivity {
                 Toast.makeText(RegistratiActivity.this, "Password non valida almeno 6 caratteri", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if(!cbxPrivacy.isChecked()){
+                Toast.makeText(RegistratiActivity.this, "Devi accettare i termini di servizio", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             registratiEmailPassword(email,password);
         });
     }
