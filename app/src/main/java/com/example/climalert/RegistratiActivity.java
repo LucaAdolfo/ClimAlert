@@ -28,8 +28,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistratiActivity extends AppCompatActivity {
     private static final String TAG = "RegistratiActivity";
@@ -45,6 +49,7 @@ public class RegistratiActivity extends AppCompatActivity {
     private TextView edit_conferma_password;
     private CheckBox cbxPrivacy;
 
+    private FirebaseFirestore database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,7 @@ public class RegistratiActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        database = FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -137,7 +143,7 @@ public class RegistratiActivity extends AppCompatActivity {
                 return;
             }
 
-            registratiEmailPassword(email,password);
+            registratiEmailPassword(email,password,username);
         });
     }
 
@@ -152,8 +158,9 @@ public class RegistratiActivity extends AppCompatActivity {
 
     }
 
-    private void registratiEmailPassword(String email,String password){
+    private void registratiEmailPassword(String email,String password,String username){
         //Fa anche log in se registrazione ha successo
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -162,7 +169,21 @@ public class RegistratiActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            registrationSuccessUI();
+                            //salva dati utente nel database
+                            Map<String, Object> userData = new HashMap<>();
+                            userData.put("username",username);
+//                            userData.put("email",email); ridondante
+                            userData.put("iscritto_il", com.google.firebase.Timestamp.now());
+                            if (user != null) {//per sicurezza
+                                database.collection("users").document(user.getUid()).set(userData).addOnSuccessListener(aVoid -> {
+                                    Log.d(TAG, "Utente aggiunto al database");
+                                    registrationSuccessUI();
+                                }).addOnFailureListener(e -> {
+                                    Log.e(TAG, "Errore nell'aggiunta dell'utente al database", e);
+                                    Toast.makeText(RegistratiActivity.this, "Errore nell'aggiunta dell'utente",
+                                            Toast.LENGTH_SHORT).show();
+                                });
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

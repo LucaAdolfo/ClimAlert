@@ -43,9 +43,9 @@ public class AccediActivity extends AppCompatActivity {
 
         btnAccedi = findViewById(R.id.btnAccedi);
         btnAccedi.setOnClickListener(view -> {
-            String username = email_text.getText().toString().trim();
+            String email = email_text.getText().toString().trim();
             String password = password_text.getText().toString().trim();
-            emailPasswordLogin(username, password);
+            emailPasswordLogin(email, password);
         });
 
         //registrati
