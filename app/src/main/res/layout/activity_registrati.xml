@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/lblUsername"
+        android:id="@+id/lblMail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -63,7 +63,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginTop="8dp"
         app:hintEnabled="false"
-        app:layout_constraintTop_toBottomOf="@id/lblUsername"
+        app:layout_constraintTop_toBottomOf="@id/lblMail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -72,6 +72,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Inserisci la tua email"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="5" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/lblUsername"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="start"
+        android:text="Username:"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:layout_marginStart="24dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        app:layout_constraintTop_toBottomOf="@id/input_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_username"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="8dp"
+        app:hintEnabled="false"
+        app:layout_constraintTop_toBottomOf="@id/lblUsername"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Inserisci il tuo username"
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines="5" />
 
@@ -88,7 +126,7 @@
         android:textSize="24sp"
         android:layout_marginStart="24dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        app:layout_constraintTop_toBottomOf="@id/input_email"
+        app:layout_constraintTop_toBottomOf="@id/input_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
