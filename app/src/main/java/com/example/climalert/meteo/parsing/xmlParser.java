@@ -15,7 +15,7 @@ import java.util.Map;
 * meteogrammi -> meteogramma (con zona) -> scadenza (data)
 * bollettini
 *
-*
+*\
 * end tag -> /previsioni
 * */
 class DataEmissione{
