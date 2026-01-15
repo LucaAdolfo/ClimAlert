@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ClimAlert</string>
+    <string name="segnalazione">SEGNALAZIONE</string>
+    <string name="indietro">Indietro</string>
+    <string name="zona_interesse">Zona di interesse</string>
+    <string name="tipo_evento">Tipo di evento</string>
+    <string name="descrizione">Descrizione</string>
+    <string name="aggiunta_descrizione">Inserisci una breve descrizione…</string>
+    <string name="aggiunta_immagini">Aggiunta immagini</string>
+    <string name="carica">Carica</string>
+    <string name="invia_segnalazione">INVIA SEGNALAZIONE</string>
+
 </resources>

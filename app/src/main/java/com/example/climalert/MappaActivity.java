@@ -34,17 +34,23 @@ import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
 import java.util.ArrayList;
 import org.osmdroid.views.overlay.Marker;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 public class MappaActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView map = null;
 
     private GpsMyLocationProvider myLocation = null;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mappa);
+        db = FirebaseFirestore.getInstance();
 
         //Istanzia osm di default
         Context ctx = getApplicationContext();
@@ -54,6 +60,7 @@ public class MappaActivity extends AppCompatActivity {
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.getController().setZoom(9.5);
         map.setMultiTouchControls(true);
+        caricaSegnalazioni();
         String[] permissions = new String[]{
                 // if you need to show the current location, uncomment the line below
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -83,8 +90,7 @@ public class MappaActivity extends AppCompatActivity {
                         map.getOverlays().add(userMarker);
                         userMarker.setTitle("You");
                         userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                        userMarker.getIcon();//TODO
-                        myLocation.stopLocationProvider();
+                        //userMarker.getIcon();//TODO
                     });
                 }
             }
@@ -155,7 +161,42 @@ public class MappaActivity extends AppCompatActivity {
         }
     }
 
+    private void caricaSegnalazioni() {
+        //Prendo la collezione di segnalazioni (impostato limite 50 evitare rallentamnenti)
+        //TODO vedere se metterne di più
+        db.collection("segnalazioni")
+                .limit(50)
+                .get()
+                .addOnSuccessListener(query -> {
+                    for (QueryDocumentSnapshot doc : query) { //query ha gli elementi trovati
 
+                        Double lat = doc.getDouble("lat");
+                        Double lon = doc.getDouble("lon");
+                        if (lat == null || lon == null) continue;
+
+                        String tipo = doc.getString("tipo");
+                        String descrizione = doc.getString("descrizione");
+
+                        GeoPoint p = new GeoPoint(lat, lon);
+
+                        //Creo un pin sulla mappa
+                        Marker marker = new Marker(map);
+                        marker.setPosition(p);
+                        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+                        marker.setTitle(tipo != null ? tipo : "Segnalazione");
+                        marker.setSubDescription(descrizione != null ? descrizione : "");
+
+                        map.getOverlays().add(marker);
+                    }
+                    map.invalidate();
+                })
+                .addOnFailureListener(e -> Log.e("MAPPA", "Errore caricamento segnalazioni: " + e.getMessage()));
     }
+
+
+
+
+}
 
 

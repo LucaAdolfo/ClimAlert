@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AccediActivity">
+    tools:context=".AccediAdminActivity">
 
     <TextView
         android:id="@+id/accedi_title"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:gravity="center"
-        android:text="Accedi"
+        android:text="Accedi come admin"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:textSize="36sp"
         android:textStyle="bold"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="start"
-        android:text="Email utente:"
+        android:text="Email admin:"
         android:textStyle="bold"
         android:textSize="24sp"
         android:layout_marginStart="24dp"
@@ -53,7 +53,7 @@
             android:id="@+id/edit_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Inserisci la tua email utente"
+            android:hint="Inserisci la tua email admin"
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines="5" />
 
@@ -120,7 +120,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="start"
-        android:text="Non hai un account?"
+        android:text="Non sei admin?"
         android:textStyle="bold"
         android:textSize="24sp"
         android:layout_marginStart="24dp"
@@ -130,61 +130,17 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btnRegistrati"
+        android:id="@+id/btnAccediUtente"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
-        android:text="REGISTRATI"
+        android:text="ACCEDI COME UTENTE"
         android:textSize="22sp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/lblAccount"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/lblOspite"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="start"
-        android:text="Oppure"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:layout_marginStart="24dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        app:layout_constraintTop_toBottomOf="@id/btnRegistrati"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btnAccediOspite"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:text="ACCEDI COME OSPITE"
-        android:textSize="22sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/lblOspite"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-    <Button
-        android:id="@+id/btnAccediAdmin"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:text="ACCEDI COME ADMIN"
-        android:textSize="22sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/btnAccediOspite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

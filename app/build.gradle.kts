@@ -51,10 +51,17 @@ dependencies {
     *
     *
     * */
+    implementation(libs.play.services.location)
     implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.squareup.okhttp3:okhttp:5.3.0")
     implementation("org.osmdroid:osmdroid-android:6.1.20")
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.tickaroo.tikxml:annotation:0.8.13")
+    implementation("com.tickaroo.tikxml:core:0.8.13")
+    annotationProcessor("com.tickaroo.tikxml:processor:0.8.13")
+    implementation("com.squareup.okio:okio:3.5.0")
+
 
 }

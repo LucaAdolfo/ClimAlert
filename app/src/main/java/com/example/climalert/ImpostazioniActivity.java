@@ -15,16 +15,20 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ImpostazioniActivity extends AppCompatActivity {
 
     private ImageButton btnIndietro;
     private MaterialButton btnDisconnetti;
     private MaterialButton btnElimina;
-    private MaterialButton btnTema, btnProfilo, btnSicurezza, btnPreferenze, btnFaq;
+    private MaterialButton btnTema, btnProfilo, btnSicurezza, btnPreferenze, btnFaq, btnNote;
     private FirebaseAuth mAuth;
 
     private static final String TAG = "ImpostazioniActivity";
+
+
+    private FirebaseFirestore database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +45,15 @@ public class ImpostazioniActivity extends AppCompatActivity {
         btnPreferenze = findViewById(R.id.btnPreferenze);
         btnFaq = findViewById(R.id.btnFaq);
         btnTema = findViewById(R.id.btnTema);
+        btnNote = findViewById(R.id.btnNote);
         btnDisconnetti = findViewById(R.id.btnDisconnetti);
         btnIndietro = findViewById(R.id.btnIndietro);
         btnElimina = findViewById(R.id.btnElimina);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        database = FirebaseFirestore.getInstance();
+
 
         btnDisconnetti.setOnClickListener(view -> {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser(); // per sicurezza in casp lo statp è cambiato
@@ -73,13 +81,14 @@ public class ImpostazioniActivity extends AppCompatActivity {
             finish();
         });
         btnElimina.setOnClickListener(view -> {
-            if (user == null) {
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser == null) {
                 Toast.makeText(ImpostazioniActivity.this, "Non sei loggato!", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Utente non loggato svolge disconetti account, come è arrivato?");
                 logOutUI();
                 return;
             }
-            accountDelete(user);
+            accountDelete(currentUser);
             Toast.makeText(ImpostazioniActivity.this, "Account cancellato!", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "Account cancellato");
 
@@ -109,6 +118,11 @@ public class ImpostazioniActivity extends AppCompatActivity {
             Intent intent = new Intent(ImpostazioniActivity.this, FaqActivity.class);
             startActivity(intent);
         });
+
+        btnNote.setOnClickListener(view -> {
+            Intent intent = new Intent(ImpostazioniActivity.this, NoteActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void logOutUI() {
@@ -119,16 +133,27 @@ public class ImpostazioniActivity extends AppCompatActivity {
         finish();
     }
     private void accountDelete(FirebaseUser user){
-        user.delete().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(ImpostazioniActivity.this, "Account cancellato!", Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "Account cancellato");
-                logOutUI();
-            } else {
-                Toast.makeText(ImpostazioniActivity.this, "Errore nella cancellazione dell'account!", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Errore nella cancellazione dell'account");
-            }
-        });
+        String uid = user.getUid();
+        database.collection("users").document(uid)
+                .delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Dati utente rimossi da Firestore");
+                    } else {
+                        Log.e(TAG, "Errore rimozione dati Firestore", task.getException());
+                    }
+
+                    user.delete().addOnCompleteListener(authTask -> {
+                        if (authTask.isSuccessful()) {
+                            Toast.makeText(ImpostazioniActivity.this, "Account cancellato definitivamente!", Toast.LENGTH_SHORT).show();
+                            Log.i(TAG, "Account Auth eliminato");
+                            logOutUI();
+                        } else {
+                            Toast.makeText(ImpostazioniActivity.this, "Errore nella cancellazione dell'account!", Toast.LENGTH_SHORT).show();
+                            Log.e(TAG, "Errore Auth delete", authTask.getException());
+                        }
+                    });
+                });
     }
 
 
