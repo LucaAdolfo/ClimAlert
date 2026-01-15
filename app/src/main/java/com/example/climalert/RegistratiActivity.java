@@ -117,7 +117,7 @@ public class RegistratiActivity extends AppCompatActivity {
         btnRegistrati.setOnClickListener(view -> {
             String email = edit_email.getText().toString().trim();
             String password = edit_password.getText().toString().trim();
-            String confermaPassword = edit_conferma_password.getText().toString();
+            String confermaPassword = edit_conferma_password.getText().toString().trim();
             String username = edit_username.getText().toString().trim();
 
             if (!password.equals(confermaPassword)) {

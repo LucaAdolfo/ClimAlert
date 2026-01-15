@@ -57,4 +57,10 @@ dependencies {
     implementation("org.osmdroid:osmdroid-android:6.1.20")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.tickaroo.tikxml:annotation:0.8.13")
+    implementation("com.tickaroo.tikxml:core:0.8.13")
+    annotationProcessor("com.tickaroo.tikxml:processor:0.8.13")
+    implementation("com.squareup.okio:okio:3.5.0")
+
+
 }

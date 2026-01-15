@@ -13,13 +13,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.climalert.meteo.ArpavMeteo;
 import com.example.climalert.meteo.MeteoCallback;
-import com.example.climalert.meteo.parsing.xmlParser;
+import com.example.climalert.meteo.parsing.ArpavMeteo;
+import com.example.climalert.meteo.parsing.Previsioni;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textArpav;
@@ -105,43 +103,19 @@ public class MainActivity extends AppCompatActivity {
         try {
             meteo.fetchData(new MeteoCallback() {
                 @Override
-                public void OnSuccess(String response) {
-                    Log.d("main","dati estratti");
-                    runOnUiThread(() -> {
-//                        xmlParser p = new xmlParser();
-//                        Map meteoMap = p.parseXml(response);
-//                        String m = (String) meteoMap.get("data_emissione");
-                        xmlParser parser = new xmlParser();
-
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Map valoriMeteo = parser.parseXml(response);
-                                    Log.d("Luca", (String) valoriMeteo.get("data_emissione"));
-
-                                } catch (Exception e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
-                            }).start();
-
-
-
-
-
-
-                        //textArpav.setText();
-                        //dentro response ci sono i dati dell'arpav
-
-
-                    });
+                public void OnSuccess(Previsioni previsioni) {
+                    runOnUiThread(
+                            () -> textArpav.setText(
+                                    previsioni.getMeteogrammi().get(0).getScadenze().get(0).getPrevisioni().get(0).getValue()
+                            )
+                    );
                 }
 
                 @Override
                 public void OnFailure(String message, Exception e) {
                     runOnUiThread(() -> {
                         textArpav.setText("Errore caricamento");
+                        Log.e("ArpavMeteo", "Errore durante il caricamento: " + e.getMessage());
                     });
                 }
             });
