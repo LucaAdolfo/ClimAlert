@@ -47,153 +47,151 @@
 
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnInfo"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="32dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="Profilo"
-        android:textSize="24sp"
-        style="@style/Widget.MaterialComponents.Button.Icon"
-
-        app:icon="@drawable/ic_profile"
-        app:iconGravity="start"
-        app:iconSize="32dp"
-
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/headerGuideline"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerGuideline" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSicurezza"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="120dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="Sicurezza"
-        android:textSize="24sp"
-        style="@style/Widget.MaterialComponents.Button.Icon"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        app:icon="@drawable/ic_lock"
-        app:iconGravity="start"
-        app:iconSize="32dp"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="32dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="Profilo"
+                android:textSize="24sp"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/ic_profile"
+                app:iconGravity="start"
+                app:iconSize="32dp" />
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerGuideline" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSicurezza"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="Sicurezza"
+                android:textSize="24sp"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/ic_lock"
+                app:iconGravity="start"
+                app:iconSize="32dp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnTema"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="202dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="Tema"
-        android:textSize="24sp"
-        style="@style/Widget.MaterialComponents.Button.Icon"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTema"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="Tema"
+                android:textSize="24sp"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/ic_theme"
+                app:iconGravity="start"
+                app:iconSize="32dp" />
 
-        app:icon="@drawable/ic_theme"
-        app:iconGravity="start"
-        app:iconSize="32dp"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPreferenze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="Preferenze"
+                android:textSize="24sp"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/ic_preferences"
+                app:iconGravity="start"
+                app:iconSize="32dp" />
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerGuideline" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFaq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="FAQ"
+                android:textSize="24sp"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/ic_faq"
+                app:iconGravity="start"
+                app:iconSize="32dp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPreferenze"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="290dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="Preferenze"
-        android:textSize="24sp"
-        style="@style/Widget.MaterialComponents.Button.Icon"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="NOTE"
+                android:textSize="24sp"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/ic_note"
+                app:iconGravity="start"
+                app:iconSize="32dp" />
 
-        app:icon="@drawable/ic_preferences"
-        app:iconGravity="start"
-        app:iconSize="32dp"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDisconnetti"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="Disconnetti"
+                android:textSize="24sp"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/ic_disconnect"
+                app:iconGravity="start"
+                app:iconSize="32dp"
+                app:backgroundTint="@android:color/holo_red_light" />
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerGuideline" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnElimina"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="ELIMINA ACCOUNT"
+                android:textSize="24sp"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/ic_delete"
+                app:iconGravity="start"
+                app:iconSize="32dp"
+                app:backgroundTint="@android:color/holo_red_light" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnFaq"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="378dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="FAQ"
-        android:textSize="24sp"
-        style="@style/Widget.MaterialComponents.Button.Icon"
-
-        app:icon="@drawable/ic_faq"
-        app:iconGravity="start"
-        app:iconSize="32dp"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerGuideline" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnDisconnetti"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="466dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="Disconnetti"
-        android:textSize="24sp"
-        style="@style/Widget.MaterialComponents.Button.Icon"
-
-        app:icon="@drawable/ic_disconnect"
-        app:iconGravity="start"
-        app:iconSize="32dp"
-        app:backgroundTint="@android:color/holo_red_light"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerGuideline" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnElimina"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="554dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="ELIMINA ACCOUNT"
-        android:textSize="24sp"
-        style="@style/Widget.MaterialComponents.Button.Icon"
-
-        app:icon="@drawable/ic_delete"
-        app:iconGravity="start"
-        app:iconSize="32dp"
-        app:backgroundTint="@android:color/holo_red_light"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerGuideline" />
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

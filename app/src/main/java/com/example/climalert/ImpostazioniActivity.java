@@ -22,7 +22,7 @@ public class ImpostazioniActivity extends AppCompatActivity {
     private ImageButton btnIndietro;
     private MaterialButton btnDisconnetti;
     private MaterialButton btnElimina;
-    private MaterialButton btnTema, btnProfilo, btnSicurezza, btnPreferenze, btnFaq;
+    private MaterialButton btnTema, btnProfilo, btnSicurezza, btnPreferenze, btnFaq, btnNote;
     private FirebaseAuth mAuth;
 
     private static final String TAG = "ImpostazioniActivity";
@@ -45,6 +45,7 @@ public class ImpostazioniActivity extends AppCompatActivity {
         btnPreferenze = findViewById(R.id.btnPreferenze);
         btnFaq = findViewById(R.id.btnFaq);
         btnTema = findViewById(R.id.btnTema);
+        btnNote = findViewById(R.id.btnNote);
         btnDisconnetti = findViewById(R.id.btnDisconnetti);
         btnIndietro = findViewById(R.id.btnIndietro);
         btnElimina = findViewById(R.id.btnElimina);
@@ -115,6 +116,11 @@ public class ImpostazioniActivity extends AppCompatActivity {
 
         btnFaq.setOnClickListener(view -> {
             Intent intent = new Intent(ImpostazioniActivity.this, FaqActivity.class);
+            startActivity(intent);
+        });
+
+        btnNote.setOnClickListener(view -> {
+            Intent intent = new Intent(ImpostazioniActivity.this, NoteActivity.class);
             startActivity(intent);
         });
     }

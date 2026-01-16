@@ -51,6 +51,7 @@ dependencies {
     *
     *
     * */
+    implementation(libs.play.services.location)
     implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.squareup.okhttp3:okhttp:5.3.0")

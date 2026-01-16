@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navBar;
     private ImageButton btnImpostazioni;
     private Button btnSegnalazione;
+    private Button btnMeteo;
 
     private FirebaseAnalytics mFirebaseAnalytics;
     @Override
@@ -95,6 +96,13 @@ public class MainActivity extends AppCompatActivity {
             //altro id
             return false;
         });
+
+        btnMeteo = findViewById(R.id.btnMeteo);
+        btnMeteo.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, MeteoActivity.class);
+            startActivity(intent);
+        });
+
 
         textArpav = findViewById(R.id.previsioniPosizione);
 

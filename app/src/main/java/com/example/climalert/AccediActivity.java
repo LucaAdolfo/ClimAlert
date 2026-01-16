@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class AccediActivity extends AppCompatActivity {
     private static final String TAG = "AccediActivity";
-    private Button btnAccedi, btnRegistrati, btnAccediOspite;
+    private Button btnAccedi, btnRegistrati, btnAccediOspite, btnAccediAdmin;
 
     private EditText email_text = null;
     private EditText password_text = null;
@@ -61,6 +61,15 @@ public class AccediActivity extends AppCompatActivity {
         btnAccediOspite.setOnClickListener(view -> {
             anonymousLogin();
         });
+
+        //accedi come admin
+        btnAccediAdmin = findViewById(R.id.btnAccediAdmin);
+        btnAccediAdmin.setOnClickListener(view -> {
+            Intent intent = new Intent(AccediActivity.this, AccediAdminActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
     }
 
     @Override
