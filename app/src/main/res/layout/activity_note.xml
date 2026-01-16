@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        android:text="junit\next-juni\nespresso-core\nappcompat\nmaterial\nactivity\nconstraintlayout\nplay-services-maps\nfirebase-auth\nplay-services-location"
+        android:text="junit\next-juni\nespresso-core\nappcompat\nmaterial\nactivity\nconstraintlayout\nplay-services-maps\nfirebase-auth\nplay-services-location\n okhttp \nTikxml"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtLibrerie" />
 
