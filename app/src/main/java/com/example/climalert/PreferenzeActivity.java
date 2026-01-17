@@ -6,6 +6,7 @@ import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -13,6 +14,8 @@ import androidx.core.view.WindowInsetsCompat;
 public class PreferenzeActivity extends AppCompatActivity {
 
     private ImageButton btnIndietro;
+    private SwitchCompat switchNotifiche;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,12 @@ public class PreferenzeActivity extends AppCompatActivity {
             Intent intent = new Intent(PreferenzeActivity.this, ImpostazioniActivity.class);
             startActivity(intent);
             finish();
+        });
+
+        switchNotifiche = findViewById(R.id.switchNotifiche);
+        switchNotifiche.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            //TODO: modifica stato notifiche
+
         });
     }
 }

@@ -11,17 +11,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class SicurezzaActivity extends AppCompatActivity {
+public class CambiaUsernameActivity extends AppCompatActivity {
 
     private ImageButton btnIndietro;
-    private Button btnModificaPassword, btnTerminiServizio;
+    private Button btnSalva;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_sicurezza);
+        setContentView(R.layout.activity_cambia_username);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -29,22 +29,22 @@ public class SicurezzaActivity extends AppCompatActivity {
         });
 
         btnIndietro = findViewById(R.id.btnIndietro);
+
         btnIndietro.setOnClickListener(view -> {
-            Intent intent = new Intent(SicurezzaActivity.this, ImpostazioniActivity.class);
+            Intent intent = new Intent(CambiaUsernameActivity.this, ProfiloActivity.class);
             startActivity(intent);
             finish();
         });
 
-        btnModificaPassword = findViewById(R.id.btnModificaPassword);
-        btnModificaPassword.setOnClickListener(view -> {
-            Intent intent = new Intent(SicurezzaActivity.this, ModificaPasswordActivity.class);
-            startActivity(intent);
-        });
+        btnSalva = findViewById(R.id.btnSalva);
 
-        btnTerminiServizio = findViewById(R.id.btnTerminiServizio);
-        btnTerminiServizio.setOnClickListener(view -> {
-            Intent intent = new Intent(SicurezzaActivity.this, TerminiServizioActivity.class);
+        btnSalva.setOnClickListener(view -> {
+
+            //TODO: if(username nuovo non è già presente) cambia username nel database
+
+            Intent intent = new Intent(CambiaUsernameActivity.this, ProfiloActivity.class);
             startActivity(intent);
+            finish();
         });
     }
 }
