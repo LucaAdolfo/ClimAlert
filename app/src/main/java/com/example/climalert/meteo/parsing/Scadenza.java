@@ -20,4 +20,15 @@ public class Scadenza{
     public List<Previsione> getPrevisioni() {
         return previsioni;
     }
+    /**@param type può essere o "image" o "text"
+     * @return previsione or null se non trovata
+     * */
+    public Previsione getPrevisioni(String type) {
+        for (Previsione previsione : previsioni){
+            if (previsione.getType().equals(type)){
+                return previsione;
+            }
+        }
+        return null;
+    }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -13,11 +14,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.climalert.meteo.MeteoCallback;
 import com.example.climalert.meteo.parsing.ArpavMeteo;
+import com.example.climalert.meteo.parsing.Previsione;
 import com.example.climalert.meteo.parsing.Previsioni;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textArpav;
@@ -25,8 +32,26 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btnImpostazioni;
     private Button btnSegnalazione;
     private Button btnMeteo;
+    private ImageView immagine1;
 
     private FirebaseAnalytics mFirebaseAnalytics;
+    private String getDataPrevisione(){
+        Calendar calendario = Calendar.getInstance();
+        SimpleDateFormat formatoGiorno = new SimpleDateFormat("EEE", Locale.ITALIAN); //Significa nome abbreviato EEE le prime tre lettere ... quindi es Lun
+        String giornoSettimana = formatoGiorno.format(calendario.getTime()).toLowerCase();
+        int giornoMese = calendario.get(Calendar.DAY_OF_MONTH);
+        int oraDelGiorno = calendario.get(Calendar.HOUR_OF_DAY); // Formato 24 ore
+        SimpleDateFormat formatoMese = new SimpleDateFormat("MMMM", Locale.ITALIAN);
+        String meseEsteso = formatoMese.format(calendario.getTime()).toLowerCase();
+
+        String periodo;
+        if (oraDelGiorno < 12) {
+            periodo = "mattina";
+        } else {
+            periodo = "pomeriggio";
+        }
+        return giornoSettimana + " " + giornoMese + " "+meseEsteso + " " + periodo;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,17 +130,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         textArpav = findViewById(R.id.previsioniPosizione);
-
-
+        immagine1 = findViewById(R.id.meteoOggi);
         ArpavMeteo meteo = new ArpavMeteo();
         try {
             meteo.fetchData(new MeteoCallback() {
                 @Override
                 public void OnSuccess(Previsioni previsioni) {
                     runOnUiThread(
-                            () -> textArpav.setText(
-                                    previsioni.getMeteogrammi().get(0).getScadenze().get(0).getPrevisioni().get(0).getValue()
-                            )
+                            () -> {
+                                Previsione previsioniInThread = previsioni.getMeteogrammi("Venezia e laguna",getDataPrevisione()).getPrevisioni("image");
+                                textArpav.setText(
+                                        previsioniInThread.getTitle() + "°C"
+                                    );
+
+                                String url = previsioniInThread.getValue();
+                                Glide.with(MainActivity.this).load(url)
+                                        .placeholder(R.drawable.ic_lock)
+                                        .error(R.drawable.ic_disconnect)
+                                        .into(immagine1);
+
+
+
+                            }
                     );
                 }
 
@@ -150,8 +186,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
 
         });
-
-
-
     }
+
+
 }

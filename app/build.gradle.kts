@@ -62,6 +62,8 @@ dependencies {
     implementation("com.tickaroo.tikxml:core:0.8.13")
     annotationProcessor("com.tickaroo.tikxml:processor:0.8.13")
     implementation("com.squareup.okio:okio:3.5.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
 
 }
