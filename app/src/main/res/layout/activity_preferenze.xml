@@ -47,4 +47,60 @@
 
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/lblNotifiche"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:text="Notifiche"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerGuideline"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switchNotifiche"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="150dp"
+        android:checked="true"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@id/headerGuideline"
+        app:layout_constraintStart_toEndOf="@id/lblNotifiche"/>
+
+    <TextView
+        android:id="@+id/lblPosizione"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:text="Scegli la zona di interesse:"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblNotifiche"/>
+
+    <FrameLayout
+        android:id="@+id/zonaMappa"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:background="#E0E0E0"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/lblPosizione"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_menu_mylocation"
+            app:tint="#000000"
+            android:contentDescription="@string/zona_interesse"/>
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

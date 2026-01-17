@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NoteActivity">
+    tools:context=".TerminiServizioActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/headerGuideline"
@@ -20,8 +20,8 @@
         android:layout_height="0dp"
         android:background="@android:color/darker_gray"
         android:gravity="center_vertical|start"
-        android:paddingStart="180dp"
-        android:text="NOTE"
+        android:paddingStart="130dp"
+        android:text="TERMINI DI SERVIZIO"
         android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/headerGuideline"
@@ -47,25 +47,15 @@
 
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- TODO: scrivere termini -->
     <TextView
-        android:id="@+id/txtLibrerie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        android:text="Librerie utilizzate:"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/headerGuideline"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:text=""
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:text="junit\next-juni\nespresso-core\nappcompat\nmaterial\nactivity\nconstraintlayout\nplay-services-maps\nfirebase-auth\nplay-services-location\nokhttp\nTikxml"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtLibrerie" />
+        app:layout_constraintTop_toBottomOf="@id/headerGuideline"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
