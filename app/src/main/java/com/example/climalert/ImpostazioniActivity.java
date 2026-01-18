@@ -76,9 +76,7 @@ public class ImpostazioniActivity extends AppCompatActivity {
 
 
         btnIndietro.setOnClickListener(view -> {
-            Intent intent = new Intent(ImpostazioniActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            onBackPressed();
         });
         btnElimina.setOnClickListener(view -> {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();

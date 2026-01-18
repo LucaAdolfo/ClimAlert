@@ -3,6 +3,7 @@ package com.example.climalert;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,6 +22,11 @@ import com.example.climalert.meteo.parsing.Previsione;
 import com.example.climalert.meteo.parsing.Previsioni;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.views.MapView;
+import org.osmdroid.util.GeoPoint;
+import android.preference.PreferenceManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -186,7 +192,41 @@ public class MainActivity extends AppCompatActivity {
             return insets;
 
         });
+
+
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+        MapView mapPreview = findViewById(R.id.mapPreview);
+        View mapOverlay = findViewById(R.id.mapOverlay);
+        mapPreview.setTileSource(TileSourceFactory.MAPNIK);
+        mapPreview.setMultiTouchControls(false); //da lasciare se no possibile che si sposti la mappa
+        mapPreview.getController().setZoom(12.0);
+        GeoPoint startPoint = new GeoPoint(45.4408, 12.3155);
+        mapPreview.getController().setCenter(startPoint);
+
+        View.OnClickListener openMapListener = v -> {
+            Log.d("main", "Apertura mappa da preview o bottone");
+            Intent intent = new Intent(MainActivity.this, MappaActivity.class);
+            startActivity(intent);
+        };
+
+        mapOverlay.setOnClickListener(openMapListener);
+        findViewById(R.id.mappa).setOnClickListener(openMapListener);
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if (findViewById(R.id.mapPreview)!=null){
+            ((MapView) findViewById(R.id.mapPreview)).onResume();
+        }
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        if(findViewById(R.id.mapPreview)!=null){
+            ((MapView) findViewById(R.id.mapPreview)).onPause();
+        }
+    }
 
 }
