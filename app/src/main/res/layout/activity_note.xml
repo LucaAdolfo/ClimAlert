@@ -21,7 +21,7 @@
         android:background="@android:color/darker_gray"
         android:gravity="center_vertical|start"
         android:paddingStart="180dp"
-        android:text="NOTE"
+        android:text="@string/note"
         android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/headerGuideline"
@@ -35,7 +35,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="20dp"
         android:background="@drawable/settings_button_background"
-        android:contentDescription="Torna indietro"
+        android:contentDescription="@string/torna_indietro"
         android:elevation="4dp"
         android:padding="8dp"
         android:scaleType="fitCenter"
@@ -53,8 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        android:text="Librerie utilizzate:"
-        android:textSize="20dp"
+        android:text="@string/librerie_utilizzate"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/headerGuideline"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        android:text="junit\next-juni\nespresso-core\nappcompat\nmaterial\nactivity\nconstraintlayout\nplay-services-maps\nfirebase-auth\nplay-services-location\nokhttp\nTikxml"
+        android:text="@string/librerie_usate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtLibrerie" />
 

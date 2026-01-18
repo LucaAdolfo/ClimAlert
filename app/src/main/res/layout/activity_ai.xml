@@ -20,7 +20,7 @@
         android:layout_height="0dp"
         android:background="@android:color/darker_gray"
         android:gravity="center"
-        android:text="ClimAI"
+        android:text="@string/climai"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/headerGuideline"
@@ -45,7 +45,7 @@
         android:layout_height="55dp"
         android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Invia messaggio"
+        android:contentDescription="@string/invia_messaggio"
         android:src="@android:drawable/ic_menu_send"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@id/messaggioInputLayout"
@@ -69,7 +69,7 @@
             android:id="@+id/messaggioEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Scrivi un messaggio..."
+            android:hint="@string/scrivi_un_messaggio"
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines="5" />
 

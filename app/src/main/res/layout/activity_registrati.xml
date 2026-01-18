@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:gravity="center"
-        android:text="Registrati"
+        android:text="@string/registrati_min"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:textSize="36sp"
         android:textStyle="bold"
@@ -27,7 +27,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="20dp"
         android:background="@drawable/settings_button_background"
-        android:contentDescription="Torna indietro"
+        android:contentDescription="@string/torna_indietro"
         android:elevation="4dp"
         android:padding="8dp"
         android:scaleType="fitCenter"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="start"
-        android:text="Email utente:"
+        android:text="@string/email_utente"
         android:textStyle="bold"
         android:textSize="24sp"
         android:layout_marginStart="24dp"
@@ -71,7 +71,7 @@
             android:id="@+id/edit_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Inserisci la tua email"
+            android:hint="@string/inserisci_la_tua_email"
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines="5" />
 
@@ -83,7 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="start"
-        android:text="Username:"
+        android:text="@string/username"
         android:textStyle="bold"
         android:textSize="24sp"
         android:layout_marginStart="24dp"
@@ -109,7 +109,7 @@
             android:id="@+id/edit_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Inserisci il tuo username"
+            android:hint="@string/inserisci_il_tuo_username"
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines="5" />
 
@@ -121,7 +121,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="start"
-        android:text="Password:"
+        android:text="@string/password"
         android:textStyle="bold"
         android:textSize="24sp"
         android:layout_marginStart="24dp"
@@ -147,7 +147,7 @@
             android:id="@+id/edit_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Inserisci la password"
+            android:hint="@string/inserisci_la_password"
             android:inputType="textPassword"
             android:maxLines="5" />
 
@@ -159,7 +159,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="start"
-        android:text="Conferma password:"
+        android:text="@string/conferma_password"
         android:textStyle="bold"
         android:textSize="24sp"
         android:layout_marginStart="24dp"
@@ -185,7 +185,7 @@
             android:id="@+id/edit_conferma_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Inserisci la password"
+            android:hint="@string/inserisci_la_password"
             android:inputType="textPassword"
             android:maxLines="5" />
 
@@ -214,7 +214,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Ho letto i Termini di Servizio e acconsento al trattamento dei dati."
+            android:text="@string/ho_letto_i_termini_di_servizio_e_acconsento_al_trattamento_dei_dati"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -228,7 +228,7 @@
         android:layout_marginTop="24dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
-        android:text="REGISTRATI"
+        android:text="@string/registrati"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

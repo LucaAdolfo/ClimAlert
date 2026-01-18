@@ -174,6 +174,8 @@ public class RegistratiActivity extends AppCompatActivity {
                             userData.put("username",username);
 //                            userData.put("email",email); ridondante
                             userData.put("iscritto_il", com.google.firebase.Timestamp.now());
+                            userData.put("tipo_utente","utente");
+                            userData.put("username_modificato_il", com.google.firebase.Timestamp.now());
                             if (user != null) {//per sicurezza
                                 database.collection("users").document(user.getUid()).set(userData).addOnSuccessListener(aVoid -> {
                                     Log.d(TAG, "Utente aggiunto al database");
