@@ -32,7 +32,6 @@ import android.preference.PreferenceManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,111 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btnImpostazioni;
     private Button btnSegnalazione;
     private Button btnMeteo;
-    private ImageView imgMeteo;
-    private com.google.android.gms.location.FusedLocationProviderClient fusedLocationClient;
+    private ImageView immagine1;
 
     private FirebaseAnalytics mFirebaseAnalytics;
-
-    //legge gps
-    private void recuperaPosizioneGPS() {
-        //permessi
-        if (androidx.core.app.ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            androidx.core.app.ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
-        }
-
-        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
-            if (location != null) {
-                ottieniNomeCitta(location.getLatitude(), location.getLongitude());
-            } else {
-                txtPosizione.setText("GPS non disponibile");
-            }
-        });
-    }
-
-    //per trovare città
-    private void ottieniNomeCitta(double lat, double lon) {
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            // trova l'indirizzo per le coordinate fornite
-            List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
-
-            if (addresses != null && !addresses.isEmpty()) {
-                //trova città
-                String citta = addresses.get(0).getLocality();
-
-                // se è null, prendi nome dell'area urbana
-                if (citta == null) {
-                    citta = addresses.get(0).getSubAdminArea();
-                }
-
-                if (citta != null) {
-                    txtPosizione.setText(citta.trim());
-                    caricaDatiMeteoReali(citta.trim());
-                } else {
-                    txtPosizione.setText("Posizione sconosciuta");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            txtPosizione.setText("Errore localizzazione");
-        }
-    }
-
-    private void caricaDatiMeteoReali(String nomeCitta) {
-        ArpavMeteo meteo = new ArpavMeteo();
-        try {
-            meteo.fetchData(new MeteoCallback() {
-                @Override
-                public void OnSuccess(Previsioni previsioni) {
-                    runOnUiThread(() -> {
-                        try {
-                            var meteogramma = previsioni.getMeteogrammi(nomeCitta, getDataPrevisione());
-
-                            String gradiFinali = "--°C";
-                            for (Previsione p : meteogramma.getPrevisioni()) {
-                                if ("Temperatura".equalsIgnoreCase(p.getTitle())) {
-                                    String valoreGrezzo = p.getValue();
-                                    gradiFinali = valoreGrezzo.replace("max ", "")
-                                            .replace("min ", "")
-                                            .replace(" ", "")
-                                            .replace("C", "°C");
-                                    break;
-                                }
-                            }
-                            txtGradi.setText(gradiFinali);
-
-                            Previsione datiImmagine = meteogramma.getPrevisioni("image");
-                            if (datiImmagine != null) {
-                                String urlIcona = datiImmagine.getValue();
-                                Glide.with(MainActivity.this)
-                                        .load(urlIcona)
-                                        .placeholder(R.drawable.ic_lock)
-                                        .into(imgMeteo);
-                            }
-
-                        } catch (Exception e) {
-                            android.util.Log.e("ARPAV", "Errore parsing per: " + nomeCitta + " - " + e.getMessage());
-
-                            if (!nomeCitta.equals("Venezia e laguna")) {
-                                caricaDatiMeteoReali("Venezia e laguna");
-                            } else {
-                                txtGradi.setText("N/D");
-                            }
-                        }
-                    });
-                }
-
-                @Override
-                public void OnFailure(String message, Exception e) {
-                    android.util.Log.e("ARPAV", "Errore: " + message);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private String getDataPrevisione(){
         Calendar calendario = Calendar.getInstance();
         SimpleDateFormat formatoGiorno = new SimpleDateFormat("EEE", Locale.ITALIAN); //Significa nome abbreviato EEE le prime tre lettere ... quindi es Lun
@@ -163,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return giornoSettimana + " " + giornoMese + " "+meseEsteso + " " + periodo;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -247,6 +143,43 @@ public class MainActivity extends AppCompatActivity {
         txtGradi = findViewById(R.id.previsioniPosizione);
         imgMeteo = findViewById(R.id.meteoOggi);
 
+        textArpav = findViewById(R.id.previsioniPosizione);
+        immagine1 = findViewById(R.id.meteoOggi);
+        ArpavMeteo meteo = new ArpavMeteo();
+        try {
+            meteo.fetchData(new MeteoCallback() {
+                @Override
+                public void OnSuccess(Previsioni previsioni) {
+                    runOnUiThread(
+                            () -> {
+                                Previsione previsioniInThread = previsioni.getMeteogrammi("Venezia e laguna",getDataPrevisione()).getPrevisioni("image");
+                                textArpav.setText(
+                                        previsioniInThread.getTitle() + "°C"
+                                    );
+
+                                String url = previsioniInThread.getValue();
+                                Glide.with(MainActivity.this).load(url)
+                                        .placeholder(R.drawable.ic_lock)
+                                        .error(R.drawable.ic_disconnect)
+                                        .into(immagine1);
+
+
+
+                            }
+                    );
+                }
+
+                @Override
+                public void OnFailure(String message, Exception e) {
+                    runOnUiThread(() -> {
+                        textArpav.setText("Errore caricamento");
+                        Log.e("ArpavMeteo", "Errore durante il caricamento: " + e.getMessage());
+                    });
+                }
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         Button bottoneMappa = findViewById(R.id.mappa);
         bottoneMappa.setOnClickListener(view -> {
                 Log.d("main", "bottone premuto mappa");

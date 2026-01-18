@@ -88,6 +88,35 @@
 
     </androidx.cardview.widget.CardView>
 
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/mapPreviewContainer"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toTopOf="@id/mappa"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <org.osmdroid.views.MapView
+            android:id="@+id/mapPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:focusable="false" />
+
+        <View
+            android:id="@+id/mapOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground" />
+
+    </androidx.cardview.widget.CardView>
+
     <Button
         android:id="@+id/mappa"
         android:layout_width="wrap_content"
@@ -156,5 +185,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headerGuideline"
         android:contentDescription="@string/meteo_attuale" />
+
+    <ImageView
+        android:id="@+id/meteoOggi"
+        android:layout_width="152dp"
+        android:layout_height="196dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/previsioniPosizione"
+        app:srcCompat="@drawable/sole" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
