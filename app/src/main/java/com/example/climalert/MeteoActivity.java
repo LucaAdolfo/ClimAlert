@@ -66,7 +66,8 @@ public class MeteoActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, giorniDaAggiungere);
 
-        SimpleDateFormat sdfGiorno = new SimpleDateFormat("EEE", Locale.ITALY);    SimpleDateFormat sdfMese = new SimpleDateFormat("MMMM", Locale.ITALY);
+        SimpleDateFormat sdfGiorno = new SimpleDateFormat("EEE", Locale.ITALY);
+        SimpleDateFormat sdfMese = new SimpleDateFormat("MMMM", Locale.ITALY);
 
         String giornoSett = sdfGiorno.format(cal.getTime()).toLowerCase().replace(".", "");
         int giornoMese = cal.get(Calendar.DAY_OF_MONTH);
@@ -139,9 +140,14 @@ public class MeteoActivity extends AppCompatActivity {
                             LinearLayout container = findViewById(R.id.containerPrevisioni);
                             if (container != null) container.removeAllViews();
 
-                            for (int i = 0; i < 4; i++) {
+                            for (int i = 0; i < 5; i++) {
                                 String dataTarget = getDataPrevisioneCustom(i);
                                 var meteogramma = previsioni.getMeteogrammi(nomeCitta, dataTarget);
+
+                                if (meteogramma == null) {
+                                    String dataSemplice = dataTarget.replace(" pomeriggio", "").replace(" mattina", "");
+                                    meteogramma = previsioni.getMeteogrammi(nomeCitta, dataSemplice);
+                                }
 
                                 //prova la variante "Città e zone limitrofe"
                                 if (meteogramma == null) {
