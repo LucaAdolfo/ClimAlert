@@ -117,4 +117,44 @@
     ]]>
     </string>
 
+    <!--  Test Activity  -->
+    <string name="test_activity_title">HurricaneAI Test</string>
+    <string name="test_activity_button">INIZIA TEST</string>
+    <string name="test_activity_status_ready">Pronto</string>
+    <string name="scrape_button_text">AVVIA SCRAPING</string>
+    <string name="test_single_button_text">TEST SINGOLO SITO</string>
+    <string name="chat_button_text">💬 APRI CHAT AI</string>
+    <!--  Messaggi di Stato  -->
+    <string name="database_test_running">Test database in corso</string>
+    <string name="database_test_success">Database OK!\nRecord: %d</string>
+    <string name="database_test_error">Errore durante il test del database.</string>
+    <string name="scraping_running">Avvio scraping siti ufficiali...</string>
+    <string name="scraping_success">Scraping completato!\nAggiunti: %d record\nTotale: %d record\nRisultati per %s: %d</string>
+    <string name="scraping_no_new_data">Scraping completato ma nessun dato nuovo. Controlla LogCat per dettagli.</string>
+    <string name="scraping_error">Errore durante lo scraping.</string>
+    <string name="single_test_running">Test singolo sito...</string>
+    <string name="single_test_result">Test sito:\nURL: %s\nCaratteri: %d\nPrime 200 chars:\n%s</string>
+    <string name="single_test_error">Errore test: %s</string>
+    <!--  UI Strings  -->
+    <string name="ui_title">Hurricane.AI</string>
+    <string name="ui_tornado_logo_description">Logo di Hurricane AI, un tornado stilizzato</string>
+    <string name="ui_welcome_message">Benvenuto in Hurricane.AI\nL\'assistente per la prevenzione dei disastri naturali</string>
+    <string name="ui_instructions">Istruzioni:\n1. Clicca TEST DATABASE per verificare\n2. Clicca AVVIA SCRAPING per scaricare dati reali\n3. Controlla LogCat per i dettagli</string>
+    <!--  Chat UI Strings  -->
+    <string name="chat_header_title">Hurricane.AI</string>
+    <string name="chat_back_button">Indietro</string>
+    <string name="chat_input_hint">Scrivi la tua domanda...</string>
+    <string name="chat_send_button">Invia</string>
+    <string name="chat_welcome_message">"Ciao! Sono Hurricane.AI, l\'assistente per la prevenzione dei disastri naturali.\n\nChiedimi informazioni su:\n• Cosa fare in caso di terremoto\n• Come prepararsi per un\'alluvione\n• Procedure per eruzioni vulcaniche\n• Allerte meteo e emergenze"</string>
+    <string name="chat_typing_indicator">Hurricane.AI sta cercando informazioni...</string>
+    <string name="chat_error_message">Errore nella ricerca. Riprova più tardi.</string>
+    <string name="chat_empty_message_toast">Scrivi un messaggio</string>
+    <!--  Developer Mode Strings  -->
+    <string name="dev_mode_title">Modalità Sviluppatore</string>
+    <string name="dev_mode_password_hint">Inserisci password</string>
+    <string name="dev_mode_access_button">Accedi</string>
+    <string name="dev_mode_cancel_button">Annulla</string>
+    <string name="dev_mode_wrong_password">Password errata</string>
+    <string name="dev_mode_activated">Modalità sviluppatore attivata!</string>
+
 </resources>

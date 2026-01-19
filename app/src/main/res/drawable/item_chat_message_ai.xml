@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="start|center_vertical"
+    android:paddingStart="8dp"
+    android:paddingEnd="80dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <TextView
+        android:id="@+id/messageTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/bubble_ai"
+        android:padding="12dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        tools:text="Messaggio di esempio dell\'AI che può essere anche molto lungo e andare a capo su più righe senza problemi"/>
+
+    <!-- Icona per rigenerare la risposta -->
+    <ImageButton
+        android:id="@+id/regenerateButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_refresh"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Rigenera risposta"
+        android:layout_marginStart="8dp"/>
+
+</LinearLayout>

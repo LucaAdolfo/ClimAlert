@@ -97,6 +97,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.hurricaneai.HurricaneAIActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.hurricaneai.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.hurricaneai.DeveloperActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
