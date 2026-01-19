@@ -81,7 +81,7 @@ public class ArpavMeteo {
      *
      *
      * */
-    private String nomeCittaArpavCasting(String nomeCitta){
+    public static String nomeCittaArpavCasting(String nomeCitta){
         String citta = nomeCitta.toLowerCase();
         if (citta.contains("belluno")) {
             return "Belluno e Prealpi orientali";

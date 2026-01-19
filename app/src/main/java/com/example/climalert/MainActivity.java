@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (citta != null) {
-                    txtPosizione.setText(citta.trim());
+                    txtPosizione.setText(ArpavMeteo.nomeCittaArpavCasting(citta.trim()));
                     caricaDatiMeteoReali(citta.trim());
                 } else {
                     txtPosizione.setText("Posizione sconosciuta");
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 public void OnSuccess(Previsioni previsioni) {
                     runOnUiThread(() -> {
                         try {
-                            var meteogramma = previsioni.getMeteogrammi(nomeCitta, getDataPrevisione());
+                            var meteogramma = previsioni.getMeteogrammi(ArpavMeteo.nomeCittaArpavCasting(nomeCitta), getDataPrevisione());
 
                             String gradiFinali = "--°C";
                             for (Previsione p : meteogramma.getPrevisioni()) {
