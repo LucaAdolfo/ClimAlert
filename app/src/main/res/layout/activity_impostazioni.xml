@@ -21,7 +21,7 @@
         android:background="@android:color/darker_gray"
         android:gravity="center_vertical|start"
         android:paddingStart="100dp"
-        android:text="IMPOSTAZIONI"
+        android:text="@string/impostazioni"
         android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/headerGuideline"
@@ -35,7 +35,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="20dp"
         android:background="@drawable/settings_button_background"
-        android:contentDescription="Torna indietro"
+        android:contentDescription="@string/torna_indietro"
         android:elevation="4dp"
         android:padding="8dp"
         android:scaleType="fitCenter"
@@ -70,12 +70,15 @@
                 android:layout_marginTop="32dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="Profilo"
+                android:text="@string/profilo"
                 android:textSize="24sp"
+                android:elevation="8dp"
+                android:translationZ="4dp"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 app:icon="@drawable/ic_profile"
                 app:iconGravity="start"
-                app:iconSize="32dp" />
+                app:iconSize="32dp"
+                app:cornerRadius="28dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSicurezza"
@@ -86,12 +89,15 @@
                 android:layout_marginTop="8dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="Sicurezza"
+                android:text="@string/sicurezza"
                 android:textSize="24sp"
+                android:elevation="8dp"
+                android:translationZ="4dp"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 app:icon="@drawable/ic_lock"
                 app:iconGravity="start"
-                app:iconSize="32dp" />
+                app:iconSize="32dp"
+                app:cornerRadius="28dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTema"
@@ -102,12 +108,15 @@
                 android:layout_marginTop="8dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="Tema"
+                android:text="@string/tema"
                 android:textSize="24sp"
+                android:elevation="8dp"
+                android:translationZ="4dp"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 app:icon="@drawable/ic_theme"
                 app:iconGravity="start"
-                app:iconSize="32dp" />
+                app:iconSize="32dp"
+                app:cornerRadius="28dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPreferenze"
@@ -118,12 +127,15 @@
                 android:layout_marginTop="8dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="Preferenze"
+                android:text="@string/preferenze"
                 android:textSize="24sp"
+                android:elevation="8dp"
+                android:translationZ="4dp"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 app:icon="@drawable/ic_preferences"
                 app:iconGravity="start"
-                app:iconSize="32dp" />
+                app:iconSize="32dp"
+                app:cornerRadius="28dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnFaq"
@@ -134,12 +146,15 @@
                 android:layout_marginTop="8dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="FAQ"
+                android:text="@string/faq"
                 android:textSize="24sp"
+                android:elevation="8dp"
+                android:translationZ="4dp"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 app:icon="@drawable/ic_faq"
                 app:iconGravity="start"
-                app:iconSize="32dp" />
+                app:iconSize="32dp"
+                app:cornerRadius="28dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNote"
@@ -150,12 +165,24 @@
                 android:layout_marginTop="8dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="NOTE"
+                android:text="@string/note"
                 android:textSize="24sp"
+                android:elevation="8dp"
+                android:translationZ="4dp"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 app:icon="@drawable/ic_note"
                 app:iconGravity="start"
-                app:iconSize="32dp" />
+                app:iconSize="32dp"
+                app:cornerRadius="28dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/darker_gray" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDisconnetti"
@@ -166,12 +193,15 @@
                 android:layout_marginTop="8dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="Disconnetti"
+                android:text="@string/disconnetti"
                 android:textSize="24sp"
+                android:elevation="8dp"
+                android:translationZ="4dp"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 app:icon="@drawable/ic_disconnect"
                 app:iconGravity="start"
                 app:iconSize="32dp"
+                app:cornerRadius="28dp"
                 app:backgroundTint="@android:color/holo_red_light" />
 
             <com.google.android.material.button.MaterialButton
@@ -183,12 +213,15 @@
                 android:layout_marginTop="8dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="ELIMINA ACCOUNT"
+                android:text="@string/elimina_account"
                 android:textSize="24sp"
+                android:elevation="8dp"
+                android:translationZ="4dp"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 app:icon="@drawable/ic_delete"
                 app:iconGravity="start"
                 app:iconSize="32dp"
+                app:cornerRadius="28dp"
                 app:backgroundTint="@android:color/holo_red_light" />
 
         </LinearLayout>

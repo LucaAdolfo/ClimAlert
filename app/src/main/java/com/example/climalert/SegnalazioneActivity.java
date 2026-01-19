@@ -23,6 +23,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.events.MapEventsReceiver;
+import android.preference.PreferenceManager;
+
 public class SegnalazioneActivity extends AppCompatActivity {
 
     private ImageButton btnIndietro;
@@ -33,6 +40,9 @@ public class SegnalazioneActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private static final String TAG = "SegnalazioneActivity";
+    private MapView mapSelection;
+    private Marker selectedMarker;
+    private GeoPoint currentSelection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +54,10 @@ public class SegnalazioneActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        org.osmdroid.config.Configuration.getInstance().load(this,
+                android.preference.PreferenceManager.getDefaultSharedPreferences(this));
+
         database = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
@@ -55,29 +69,67 @@ public class SegnalazioneActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opzioni);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipo.setAdapter(adapter);
+        // Configurazione Mappa
+        mapSelection = findViewById(R.id.mapSelection);
+        mapSelection.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK);
+        mapSelection.setMultiTouchControls(true);
+        mapSelection.getController().setZoom(15.0);
+
+        // Posizione iniziale (es. Venezia o una di default)
+        currentSelection = new GeoPoint(45.4408, 12.3155);
+        mapSelection.getController().setCenter(currentSelection);
+
+        // Marker iniziale
+        selectedMarker = new Marker(mapSelection);
+        selectedMarker.setPosition(currentSelection);
+        selectedMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        selectedMarker.setTitle("Trascina o clicca per spostare");
+        mapSelection.getOverlays().add(selectedMarker);
+
+        // Gestione del click sulla mappa per cambiare posizione
+        org.osmdroid.events.MapEventsReceiver mReceive = new org.osmdroid.events.MapEventsReceiver() {
+            @Override
+            public boolean singleTapConfirmedHelper(GeoPoint p) {
+                currentSelection = p;
+                selectedMarker.setPosition(p);
+                mapSelection.invalidate(); // Rinfresca la mappa
+                return true;
+            }
+
+            @Override
+            public boolean longPressHelper(GeoPoint p) { return false; }
+        };
+
+        mapSelection.getOverlays().add(new org.osmdroid.views.overlay.MapEventsOverlay(mReceive));
+
+        // Modifica il click di btnInvia per usare currentSelection
         btnInvia.setOnClickListener(view -> {
-            String descrizione= etDescrizione.getText().toString().trim();
-            String tipo= spinnerTipo.getSelectedItem().toString().trim();
+            String descrizione = etDescrizione.getText().toString().trim();
+            String tipo = spinnerTipo.getSelectedItem().toString().trim();
             FirebaseUser user = mAuth.getCurrentUser();
-            if (user != null) {//per sicurezza
+
+            if (user != null) {
                 Map<String, Object> segnalazioneData = new HashMap<>();
                 segnalazioneData.put("descrizione", descrizione);
                 segnalazioneData.put("tipo", tipo);
                 segnalazioneData.put("utente", user.getUid());
                 segnalazioneData.put("email", user.getEmail());
                 segnalazioneData.put("stato", "in attesa");
-                segnalazioneData.put("lat", 0.0); //TODO inserire posizione
-                segnalazioneData.put("lon", 0.0);//TODO inserire posizione
-                segnalazioneData.put("tipo", tipo);
+
+                // COORDINATE REALI
+                segnalazioneData.put("lat", currentSelection.getLatitude());
+                segnalazioneData.put("lon", currentSelection.getLongitude());
+
                 segnalazioneData.put("timestamp", com.google.firebase.Timestamp.now());
-                database.collection("segnalazioni").add(segnalazioneData).addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "Segnalazione riuscita");
-                    segnalationSuccessUI();
-                }).addOnFailureListener(e -> {
-                    Log.e(TAG, "Errore nell'aggiunta della segnalazione al database", e);
-                    Toast.makeText(SegnalazioneActivity.this, "Segnalazione non riuscita",
-                            Toast.LENGTH_SHORT).show();
-                });
+
+                database.collection("segnalazioni").add(segnalazioneData)
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d(TAG, "Segnalazione riuscita");
+                            segnalationSuccessUI();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(this, "Errore invio", Toast.LENGTH_SHORT).show();
+                        });
             }
         });
         btnIndietro.setOnClickListener(view -> {
@@ -91,4 +143,21 @@ public class SegnalazioneActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mapSelection != null) {
+            mapSelection.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mapSelection != null) {
+            mapSelection.onPause();
+        }
+    }
+
 }
