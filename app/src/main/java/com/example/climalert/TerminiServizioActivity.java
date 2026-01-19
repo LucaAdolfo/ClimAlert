@@ -3,6 +3,7 @@ package com.example.climalert;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class TerminiServizioActivity extends AppCompatActivity {
 
     private ImageButton btnIndietro;
+    private TextView lblTermini;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,5 +33,14 @@ public class TerminiServizioActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        lblTermini = findViewById(R.id.lblTermini);
+        String testoHtml = getString(R.string.testoTerminiDiServizio);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            lblTermini.setText(android.text.Html.fromHtml(testoHtml, android.text.Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            lblTermini.setText(android.text.Html.fromHtml(testoHtml));
+        }
     }
 }

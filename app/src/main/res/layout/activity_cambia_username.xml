@@ -18,7 +18,7 @@
         android:id="@+id/idTitle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@android:color/darker_gray"
+        android:background="@drawable/rounded_bottom_header"
         android:gravity="center_vertical|start"
         android:paddingStart="150dp"
         android:text="@string/cambia_username"
