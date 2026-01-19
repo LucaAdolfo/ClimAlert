@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class AIActivity extends AppCompatActivity {
-    //test for new branch ruleset
+    //test for new branch ruleset !!
     private BottomNavigationView navBar;
 
     @Override
