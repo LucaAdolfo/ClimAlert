@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,11 +27,11 @@ import com.example.climalert.meteo.parsing.Previsione;
 import com.example.climalert.meteo.parsing.Previsioni;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.views.MapView;
 import org.osmdroid.util.GeoPoint;
-import android.preference.PreferenceManager;
+import org.osmdroid.views.MapView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    //Prova per vedere se tutto ok!
     private TextView txtGradi, txtPosizione;
     private BottomNavigationView navBar;
     private ImageButton btnImpostazioni;
