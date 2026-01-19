@@ -18,7 +18,7 @@
         android:id="@+id/idTitle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@android:color/darker_gray"
+        android:background="@drawable/rounded_bottom_header"
         android:gravity="center_vertical|start"
         android:paddingStart="150dp"
         android:text="@string/profilo"
@@ -100,7 +100,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnCambiaUsername" />
 
-    <!-- scroll view -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@id/txtSegnalazioni"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:cardBackgroundColor="#D3D3D3"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:id="@+id/containerSegnalazioni"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+    </ScrollView>
 
 
 

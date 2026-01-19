@@ -92,5 +92,29 @@
     <string name="esplora_la_mappa_e_controlla_le_segnalazioni_nella_tua_zona">Esplora la mappa e controlla le segnalazioni nella tua zona</string>
     <string name="resta_aggiornato_consultando_le_notizie_ufficiali_tutte_in_un_solo_posto">Resta aggiornato consultando le notizie ufficiali tutte in un solo posto</string>
     <string name="confrontati_con_un_ia_che_ti_aiuta_a_gestire_le_emergenze_climatiche">Confrontati con un\'IA che ti aiuta a gestire le emergenze climatiche</string>
+    <string name="testoTerminiDiServizio">
+         <![CDATA[
+         <h3><b>1. Accettazione dei Termini</b></h3>
+        L\'accesso e l\'utilizzo dell\'applicazione ClimAlert implica l\'accettazione incondizionata dei presenti Termini di Servizio. Se l\'utente non concorda con tali termini, è invitato a non utilizzare l\'applicazione. L\'utente è inoltre portato a prendere visione dei Termini di Servizio durante la creazione di un account per questa applicazione<br><br>
+        <h3><b>2. Descrizione del Servizio</b></h3>
+        ClimAlert fornisce informazioni meteorologiche basate su dati ARPAV e consente agli utenti di inviare segnalazioni riguardanti eventi climatici o pericoli. L\'app non garantisce l\'accuratezza assoluta delle previsioni o la veridicità delle segnalazioni inviate dagli utenti. <br><br>
+        <h3><b>3. Utilizzo dei Dati e Geolocalizzazione</b></h3>
+        Per fornire previsioni accurate, ClimAlert richiede l\'accesso alla posizione GPS dell\'utente. I dati sulla posizione vengono utilizzati esclusivamente per visualizzare il meteo locale e le segnalazioni pertinenti all\'area geografica dell\'utente.<br><br>
+        <h3><b>4. Segnalazioni degli Utenti</b></h3>
+        L\'utente è l\'unico responsabile del contenuto delle segnalazioni inviate. È vietato:<br><br>
+            &#8226; Inviare informazioni false, fuorvianti o allarmistiche senza fondamento.<br>
+            &#8226; Caricare contenuti offensivi o illegali.<br>
+            &#8226; Utilizzare il servizio per scopi di spam o disturbo. ClimAlert si riserva il diritto di rimuovere segnalazioni inappropriate e di sospendere l\'account dell\'utente in caso di violazione.<br><br>
+        Per limitare i danni, le segnalazioni verrano prima visionate da un utente admin e successivamente approvate. Non nè sarà controllata la correttezza, solo il contenuto<br><br>
+        <h3><b> Limitazione di Responsabilità</b></h3>
+        ClimAlert e i suoi sviluppatori non saranno responsabili per:<br><br>
+            &#8226; Eventuali danni derivanti da decisioni prese sulla base delle informazioni meteorologiche fornite dall\'app.<br>
+            &#8226; Malfunzionamenti dovuti a interruzioni dei servizi di terze parti.<br>
+            &#8226; Danni causati da eventi climatici estremi, indipendentemente dalle segnalazioni presenti nell\'app.<br>
+        <h3><b>6. Modifiche ai Termini</b></h3>
+        Ci riserviamo il diritto di modificare i presenti termini in qualsiasi momento. L\'utilizzo continuato dell\'app dopo le modifiche costituisce l\'accettazione dei nuovi termini.<br><br><br><br>
+        <small>Ultimo aggiornamento: Gennaio 2024</small>
+    ]]>
+    </string>
 
 </resources>
