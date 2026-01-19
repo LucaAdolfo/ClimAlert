@@ -27,6 +27,8 @@ import com.example.climalert.meteo.parsing.Previsione;
 import com.example.climalert.meteo.parsing.Previsioni;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -49,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
     private com.google.android.gms.location.FusedLocationProviderClient fusedLocationClient;
 
     private FirebaseAnalytics mFirebaseAnalytics;
+
+    private FirebaseAuth mAuth;
+
+
+
 
     //legge gps
     private void recuperaPosizioneGPS() {
@@ -95,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             txtPosizione.setText("Errore localizzazione");
         }
     }
+
 
     private void caricaDatiMeteoReali(String nomeCitta) {
         ArpavMeteo meteo = new ArpavMeteo();
@@ -170,6 +178,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser users = mAuth.getCurrentUser();
 
         SharedPreferences sharedPreferences=getSharedPreferences("ImpostazioniTema", MODE_PRIVATE);
         boolean isDarkMode=sharedPreferences.getBoolean("isDarkMode", false);
@@ -205,6 +215,12 @@ public class MainActivity extends AppCompatActivity {
 
         //fai segnalazione
         btnSegnalazione = findViewById(R.id.btnSegnalazione);
+        if (users!=null) {
+            if (users.isAnonymous()) {
+                btnSegnalazione.setVisibility(View.GONE);
+            }
+        }
+
         btnSegnalazione.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, SegnalazioneActivity.class);
             Bundle segn_bundle = new Bundle();
