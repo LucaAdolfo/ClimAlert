@@ -57,10 +57,12 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/faqContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:animateLayoutChanges="true">
 
         <TextView
             android:id="@+id/lblDomanda1"
@@ -72,8 +74,9 @@
             android:text="@string/domanda1"
             android:textStyle="bold"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/headerGuideline"/>
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"/>
 
         <TextView
             android:id="@+id/lblRisposta1"
@@ -84,8 +87,15 @@
             android:layout_marginEnd="20dp"
             android:text="@string/risposta1"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lblDomanda1"/>
+            android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="#CCCCCC" />
 
         <TextView
             android:id="@+id/lblDomanda2"
@@ -97,8 +107,9 @@
             android:text="@string/domanda2"
             android:textStyle="bold"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lblRisposta1"/>
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"/>
 
         <TextView
             android:id="@+id/lblRisposta2"
@@ -109,10 +120,17 @@
             android:layout_marginEnd="20dp"
             android:text="@string/risposta2"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lblDomanda2"/>
+            android:visibility="gone" />
 
-        <TextView
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="#CCCCCC" />
+
+            <TextView
             android:id="@+id/lblDomanda3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -122,8 +140,9 @@
             android:text="@string/domanda3"
             android:textStyle="bold"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lblRisposta2"/>
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"/>
 
         <TextView
             android:id="@+id/lblRisposta3"
@@ -134,11 +153,17 @@
             android:layout_marginEnd="20dp"
             android:text="@string/risposta3"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lblDomanda3"/>
+            android:visibility="gone" />
 
-        <TextView
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="#CCCCCC" />
+
+            <TextView
             android:id="@+id/lblDomanda4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -148,8 +173,9 @@
             android:text="@string/domanda4"
             android:textStyle="bold"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lblRisposta3"/>
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"/>
 
         <TextView
             android:id="@+id/lblRisposta4"
@@ -159,8 +185,15 @@
             android:layout_marginStart="20dp"
             android:text="@string/risposta4"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lblDomanda4"/>
+            android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="#CCCCCC" />
 
             <TextView
                 android:id="@+id/lblDomanda5"
@@ -172,8 +205,9 @@
                 android:text="@string/domanda5"
                 android:textStyle="bold"
                 android:textSize="24sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lblRisposta4"/>
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"/>
 
             <TextView
                 android:id="@+id/lblRisposta5"
@@ -183,8 +217,7 @@
                 android:layout_marginStart="20dp"
                 android:text="@string/risposta5"
                 android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lblDomanda5"/>
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

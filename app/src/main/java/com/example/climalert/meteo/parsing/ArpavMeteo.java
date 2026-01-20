@@ -74,9 +74,31 @@ public class ArpavMeteo {
 
 
     }
-
-
-
-
-
+    /*Voglio che il meteo mostri non la città, ma il quello che trova nell' arpav
+     * per semplicità assumiamo i comuni uguali se non è nessuno return Venezia e laguna
+     * in caso sarà l'utente a specificare nelle impostazioni quale località preferisce !
+     *
+     *
+     *
+     * */
+    public static String nomeCittaArpavCasting(String nomeCitta){
+        String citta = nomeCitta.toLowerCase();
+        if (citta.contains("belluno")) {
+            return "Belluno e Prealpi orientali";
+        } else if (citta.contains("treviso")) {
+            return "Treviso e pianura orientale";
+        } else if (citta.contains("venezia") || citta.contains("mestre")) {
+            return "Venezia e laguna";
+        } else if (citta.contains("vicenza")) {
+            return "Vicenza e pedemontana";
+        } else if (citta.contains("padova")) {
+            return "Padova e pianura centrale";
+        } else if (citta.contains("rovigo")) {
+            return "Rovigo e pianura meridionale";
+        } else if (citta.contains("verona")) {
+            return "Verona e pedemontana";
+        }
+        Log.w("MappaturaArpav", "Nessuna zona ARPAV trovata per '" + citta + "', uso il fallback.");
+        return "Venezia e laguna";
+    }
 }

@@ -3,7 +3,8 @@ package com.example.climalert;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
-
+import android.widget.TextView;
+import android.view.View;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -32,5 +33,24 @@ public class FaqActivity extends AppCompatActivity {
             finish();
         });
 
+        //per le faq a comparsa
+        setupFaq(R.id.lblDomanda1, R.id.lblRisposta1);
+        setupFaq(R.id.lblDomanda2, R.id.lblRisposta2);
+        setupFaq(R.id.lblDomanda3, R.id.lblRisposta3);
+        setupFaq(R.id.lblDomanda4, R.id.lblRisposta4);
+        setupFaq(R.id.lblDomanda5, R.id.lblRisposta5);
+
+    }
+    private void setupFaq(int domandaId, int rispostaId){
+        TextView domanda=findViewById(domandaId);
+        TextView risposta=findViewById(rispostaId);
+
+        domanda.setOnClickListener(v ->{
+            if (risposta.getVisibility()==View.GONE){
+                risposta.setVisibility(View.VISIBLE);
+            } else {
+                risposta.setVisibility(View.GONE);
+            }
+        });
     }
 }

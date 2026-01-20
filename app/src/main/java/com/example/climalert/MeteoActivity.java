@@ -131,7 +131,9 @@ public class MeteoActivity extends AppCompatActivity {
 
     private void caricaDatiMeteoReali(String nomeCitta) {
         ArpavMeteo meteo = new ArpavMeteo();
+        nomeCitta = ArpavMeteo.nomeCittaArpavCasting(nomeCitta);
         try {
+            String finalNomeCitta = nomeCitta;
             meteo.fetchData(new MeteoCallback() {
                 @Override
                 public void OnSuccess(Previsioni previsioni) {
@@ -142,23 +144,23 @@ public class MeteoActivity extends AppCompatActivity {
 
                             for (int i = 0; i < 5; i++) {
                                 String dataTarget = getDataPrevisioneCustom(i);
-                                var meteogramma = previsioni.getMeteogrammi(nomeCitta, dataTarget);
+                                var meteogramma = previsioni.getMeteogrammi(finalNomeCitta, dataTarget);
 
                                 if (meteogramma == null) {
                                     String dataSemplice = dataTarget.replace(" pomeriggio", "").replace(" mattina", "");
-                                    meteogramma = previsioni.getMeteogrammi(nomeCitta, dataSemplice);
+                                    meteogramma = previsioni.getMeteogrammi(finalNomeCitta, dataSemplice);
                                 }
 
                                 //prova la variante "Città e zone limitrofe"
                                 if (meteogramma == null) {
-                                    meteogramma = previsioni.getMeteogrammi(nomeCitta + " e zone limitrofe", dataTarget);
+                                    meteogramma = previsioni.getMeteogrammi(finalNomeCitta + " e zone limitrofe", dataTarget);
                                 }
 
                                 //altri casi speciali
                                 if (meteogramma == null) {
-                                    if (nomeCitta.equalsIgnoreCase("Venezia")) {
+                                    if (finalNomeCitta.equalsIgnoreCase("Venezia")) {
                                         meteogramma = previsioni.getMeteogrammi("Venezia e laguna", dataTarget);
-                                    } else if (nomeCitta.equalsIgnoreCase("Treviso")) {
+                                    } else if (finalNomeCitta.equalsIgnoreCase("Treviso")) {
                                         meteogramma = previsioni.getMeteogrammi("Treviso e zone limitrofe", dataTarget);
                                     }
                                 }
@@ -245,7 +247,7 @@ public class MeteoActivity extends AppCompatActivity {
                 }
 
                 if (citta != null) {
-                    txtPosizione.setText(citta.trim());
+                    txtPosizione.setText(ArpavMeteo.nomeCittaArpavCasting(citta.trim()));
                     caricaDatiMeteoReali(citta.trim());
                 } else {
                     txtPosizione.setText("Posizione sconosciuta");

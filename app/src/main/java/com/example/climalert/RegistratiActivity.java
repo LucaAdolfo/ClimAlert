@@ -98,8 +98,8 @@ public class RegistratiActivity extends AppCompatActivity {
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Toast.makeText(RegistratiActivity.this, "Apri i Termini di Servizio...", Toast.LENGTH_SHORT).show();
-                //apri termini
+                Intent intent = new Intent(RegistratiActivity.this, TerminiAccediActivity.class);
+                startActivity(intent);
             }
         };
 

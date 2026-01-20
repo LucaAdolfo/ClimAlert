@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!--colore stato selezionato-->
-    <item android:state_checked="true" android:color="@android:color/white" />
+    <item android:state_checked="true" android:color="@android:color/darker_gray" />
 
     <!--colore statto non selezionato-->
     <item android:color="#BDBDBD" />

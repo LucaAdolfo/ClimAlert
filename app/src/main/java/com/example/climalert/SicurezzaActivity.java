@@ -11,10 +11,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class SicurezzaActivity extends AppCompatActivity {
 
     private ImageButton btnIndietro;
     private Button btnModificaPassword, btnTerminiServizio;
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -27,7 +31,7 @@ public class SicurezzaActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        mAuth = FirebaseAuth.getInstance();
         btnIndietro = findViewById(R.id.btnIndietro);
         btnIndietro.setOnClickListener(view -> {
             Intent intent = new Intent(SicurezzaActivity.this, ImpostazioniActivity.class);
@@ -36,6 +40,12 @@ public class SicurezzaActivity extends AppCompatActivity {
         });
 
         btnModificaPassword = findViewById(R.id.btnModificaPassword);
+        FirebaseUser users = mAuth.getCurrentUser();
+        if (users.isAnonymous()) {
+            btnModificaPassword.setEnabled(false);
+            btnModificaPassword.setAlpha(0.5f);
+        }
+
         btnModificaPassword.setOnClickListener(view -> {
             Intent intent = new Intent(SicurezzaActivity.this, ModificaPasswordActivity.class);
             startActivity(intent);
