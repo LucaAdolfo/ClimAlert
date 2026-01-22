@@ -4,7 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.kapt") version "1.9.22"
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -38,6 +38,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 
@@ -85,6 +89,9 @@ dependencies {
     implementation("org.apache.commons:commons-text:1.10.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
-
+    /*
+    *per Gemini
+     */
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
 }
