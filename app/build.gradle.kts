@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("org.jetbrains.kotlin.android") version "1.9.22"
+    id("org.jetbrains.kotlin.kapt") version "1.9.22"
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 
@@ -31,8 +33,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }
 
@@ -43,6 +48,8 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.play.services.maps)
     implementation(libs.firebase.auth)
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -60,10 +67,10 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.tickaroo.tikxml:annotation:0.8.13")
     implementation("com.tickaroo.tikxml:core:0.8.13")
-    annotationProcessor("com.tickaroo.tikxml:processor:0.8.13")
+    kapt("com.tickaroo.tikxml:processor:0.8.13")
     implementation("com.squareup.okio:okio:3.5.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
 
 
     /*
@@ -72,8 +79,8 @@ dependencies {
     *
      */
     implementation("org.jsoup:jsoup:1.15.4")
-    implementation("androidx.room:room-runtime:2.6.0")
-    annotationProcessor("androidx.room:room-compiler:2.6.0")
+    implementation("androidx.room:room-common:2.6.0")
+    kapt("androidx.room:room-compiler:2.6.0")
     implementation("androidx.work:work-runtime:2.11.0")
     implementation("org.apache.commons:commons-text:1.10.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")

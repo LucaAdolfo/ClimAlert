@@ -10,6 +10,7 @@ constraintlayout = "2.1.4"
 playServicesMaps = "19.2.0"
 firebaseAuth = "24.0.1"
 playServicesLocation = "21.3.0"
+roomCommonJvm = "2.8.4"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -25,4 +26,3 @@ play-services-location = { group = "com.google.android.gms", name = "play-servic
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-

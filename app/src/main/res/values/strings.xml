@@ -124,6 +124,7 @@
     <string name="scrape_button_text">AVVIA SCRAPING</string>
     <string name="test_single_button_text">TEST SINGOLO SITO</string>
     <string name="chat_button_text">💬 APRI CHAT AI</string>
+    <string name="segnalazioni">Segnalazioni</string>
     <!-- Messaggi di Stato -->
     <string name="database_test_running">Test database in corso</string>
     <string name="database_test_success">Database OK!\nRecord: %d</string>
