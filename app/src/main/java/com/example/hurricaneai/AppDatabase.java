@@ -1,13 +1,13 @@
 package com.example.hurricaneai;
 
 import android.content.Context;
+
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.example.climalert.R;
-
 
 // La versione del DB è ora 10 per un'ultima, definitiva ricreazione
 @Database(entities = {EmergencyInfo.class, SiteInfo.class}, version = 10, exportSchema = false)

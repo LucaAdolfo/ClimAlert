@@ -2,8 +2,6 @@ package com.example.hurricaneai;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import com.example.climalert.R;
-
 
 @Entity(tableName = "sites")
 public class SiteInfo {

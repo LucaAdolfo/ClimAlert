@@ -1,16 +1,14 @@
 package com.example.hurricaneai;
 
-import android.util.Log;
 import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.example.climalert.R;
 
 public class AIEngine {
     private static final String TAG = "HurricaneAI_Engine";

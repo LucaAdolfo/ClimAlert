@@ -2,15 +2,15 @@ package com.example.hurricaneai;
 
 import android.content.Context;
 import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.example.climalert.R;
-
 
 public class DataInitializer {
     private static final String TAG = "DataInitializer";
