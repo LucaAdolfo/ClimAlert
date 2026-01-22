@@ -8,8 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.climalert.MainActivity;
 import com.example.climalert.R;
 
 
@@ -18,6 +21,8 @@ public class HurricaneAIActivity extends AppCompatActivity {
     private int devModeClickCount = 0;
     private long devModeLastClickTime = 0;
     private static final String DEV_PASSWORD = "Hurricane404";
+    private ImageButton btnIndietro;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,14 @@ public class HurricaneAIActivity extends AppCompatActivity {
 
         TextView titleTextView = findViewById(R.id.titleText);
         Button chatBtn = findViewById(R.id.chatButton);
+
+        btnIndietro = findViewById(R.id.btnIndietro);
+        btnIndietro.setOnClickListener(view -> {
+            Intent intent = new Intent(HurricaneAIActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
 
         chatBtn.setOnClickListener(v -> {
             Intent intent = new Intent(HurricaneAIActivity.this, ChatActivity.class);

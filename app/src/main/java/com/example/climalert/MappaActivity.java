@@ -5,6 +5,7 @@ import static java.security.AccessController.getContext;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -44,6 +46,8 @@ public class MappaActivity extends AppCompatActivity {
 
     private GpsMyLocationProvider myLocation = null;
     private FirebaseFirestore db;
+    private ImageButton btnIndietro;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,13 @@ public class MappaActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mappa);
         db = FirebaseFirestore.getInstance();
+
+        btnIndietro = findViewById(R.id.btnIndietro);
+        btnIndietro.setOnClickListener(view -> {
+            Intent intent = new Intent(MappaActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         //Istanzia osm di default
         Context ctx = getApplicationContext();
@@ -91,6 +102,15 @@ public class MappaActivity extends AppCompatActivity {
                         userMarker.setTitle("You");
                         userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
                         //userMarker.getIcon();//TODO
+
+                        android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(MappaActivity.this, R.drawable.ic_location);
+                        if (iconaCustom != null) {
+                            iconaCustom = iconaCustom.mutate();
+
+                            iconaCustom.setColorFilter(android.graphics.Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+
+                            userMarker.setIcon(iconaCustom);
+                        }
                     });
                 }
             }
@@ -183,6 +203,15 @@ public class MappaActivity extends AppCompatActivity {
                         Marker marker = new Marker(map);
                         marker.setPosition(p);
                         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+                        android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
+                        if (iconaCustom != null) {
+                            iconaCustom = iconaCustom.mutate();
+
+                            iconaCustom.setColorFilter(android.graphics.Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
+
+                            marker.setIcon(iconaCustom);
+                        }
 
                         marker.setTitle(tipo != null ? tipo : "Segnalazione");
                         marker.setSubDescription(descrizione != null ? descrizione : "");

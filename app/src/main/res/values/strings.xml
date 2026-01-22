@@ -156,5 +156,6 @@
     <string name="dev_mode_cancel_button">Annulla</string>
     <string name="dev_mode_wrong_password">Password errata</string>
     <string name="dev_mode_activated">Modalità sviluppatore attivata!</string>
+    <string name="segnalazioni">SEGNALAZIONI</string>
 
 </resources>

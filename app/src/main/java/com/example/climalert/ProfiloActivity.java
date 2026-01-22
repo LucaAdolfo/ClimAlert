@@ -122,14 +122,13 @@ public class ProfiloActivity extends AppCompatActivity {
         riga.setOrientation(LinearLayout.HORIZONTAL);
         riga.setGravity(android.view.Gravity.CENTER_VERTICAL);
         riga.setPadding(0, 20, 0, 20);
-        LinearLayout.LayoutParams rigaParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams rigaParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         riga.setLayoutParams(rigaParams);
 
         //icona
         ImageView iconaSegnalazione = new ImageView(this);
         iconaSegnalazione.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
-        iconaSegnalazione.setImageResource(R.drawable.ic_posizione); // O un'icona di allerta
+        iconaSegnalazione.setImageResource(R.drawable.ic_posizione);
         iconaSegnalazione.setPadding(10, 10, 10, 10);
 
         //testo
