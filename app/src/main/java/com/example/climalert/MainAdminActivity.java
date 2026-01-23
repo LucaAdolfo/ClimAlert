@@ -21,6 +21,7 @@ import org.osmdroid.views.MapView;
 public class MainAdminActivity extends AppCompatActivity {
 
     private Button btnSegnalazioni;
+    private Button btnLogout; // Aggiunto pulsante per il logout
     private View btnMappa;
 
     @Override
@@ -38,6 +39,15 @@ public class MainAdminActivity extends AppCompatActivity {
         btnSegnalazioni.setOnClickListener(view -> {
             Intent intent = new Intent(MainAdminActivity.this, SegnalazioniAdminActivity.class);
             startActivity(intent);
+        });
+
+        // Gestione del pulsante di logout
+        btnLogout = findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(view -> {
+            // Reindirizza alla schermata di accesso dell'admin
+            Intent intent = new Intent(MainAdminActivity.this, AccediAdminActivity.class);
+            startActivity(intent);
+            finish(); // Chiude l'activity corrente
         });
 
         btnMappa = findViewById(R.id.mapOverlay);

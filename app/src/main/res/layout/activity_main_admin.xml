@@ -49,6 +49,21 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/logout"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnGestisciSegnalazioni"/>
+
+    <Button
         android:id="@+id/btnGestisciSegnalazioni"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -74,7 +89,7 @@
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp"
         app:layout_constraintTop_toBottomOf="@id/headerGuideline"
-        app:layout_constraintBottom_toTopOf="@id/btnGestisciSegnalazioni"
+        app:layout_constraintBottom_toTopOf="@id/btnLogout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
