@@ -13,16 +13,17 @@
         android:id="@+id/btnIndietro"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="40dp"
         android:background="@drawable/settings_button_background"
         android:contentDescription="@string/torna_indietro"
         android:elevation="4dp"
         android:padding="8dp"
+        android:layout_marginBottom="20dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/ic_goback"
         app:tint="#000000"
 
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/titleText"
+
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Logo/Titolo -->
@@ -34,6 +35,7 @@
         android:textSize="34sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp"/>
+
 
     <TextView
         android:layout_width="wrap_content"

@@ -3,12 +3,8 @@ package com.example.hurricaneai;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Delete;
+
 import java.util.List;
-import com.example.climalert.R;
-
-
-import com.example.hurricaneai.EmergencyInfo;
 
 @Dao
 public interface EmergencyInfoDao {

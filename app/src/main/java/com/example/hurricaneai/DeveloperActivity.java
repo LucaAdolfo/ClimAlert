@@ -6,14 +6,14 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.climalert.R;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.example.climalert.R;
-
 
 public class DeveloperActivity extends AppCompatActivity {
 

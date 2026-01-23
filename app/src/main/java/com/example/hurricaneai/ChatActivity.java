@@ -7,15 +7,13 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
-import com.example.climalert.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.climalert.R;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
@@ -125,12 +123,9 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnMes
 
     @Override
     public void onSuggestionClick(String suggestion) {
-        // Rimuovi il messaggio di suggerimento precedente
-        // L'ultimo messaggio è sicuramente il suggerimento, quindi possiamo rimuoverlo con certezza
         if (!chatMessages.isEmpty()) {
             removeMessage(chatMessages.get(chatMessages.size() - 1));
         }
-        // Invia la domanda corretta come se l'avesse scritta l'utente
         messageInput.setText(suggestion);
         sendMessage();
     }
@@ -147,23 +142,22 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnMes
         final ChatMessage typingIndicator = new ChatMessage(getString(R.string.chat_typing_indicator), false);
         addMessage(typingIndicator);
 
-        backgroundExecutor.execute(() -> {
-            try {
-                final String response = aiEngine.getResponse(text);
+        //facico una chiamata asincrona
+        aiEngine.getResponseAsynchronous(text, new AIEngine.AICallback() {
+            @Override
+            public void onResponse(String response) {
                 mainThreadHandler.post(() -> {
                     removeMessage(typingIndicator);
-                    // Gestisce la logica per mostrare una risposta normale o un suggerimento
-                    if (response.startsWith("SUGGERIMENTO:")) {
-                        addMessage(new ChatMessage(response, false)); // Il tipo di vista gestirà il layout
-                    } else {
-                        addMessage(new ChatMessage(response, false));
-                    }
+                    addMessage(new ChatMessage(response, false));
                 });
-            } catch (Exception e) {
-                Log.e(TAG, "Errore durante la generazione della risposta AI", e);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.e(TAG, "Errore Gemini: " + t.getMessage(), t);
                 mainThreadHandler.post(() -> {
                     removeMessage(typingIndicator);
-                    addMessage(new ChatMessage(getString(R.string.chat_error_message), false));
+                    addMessage(new ChatMessage("Errore: " + t.getMessage(), false));
                 });
             }
         });

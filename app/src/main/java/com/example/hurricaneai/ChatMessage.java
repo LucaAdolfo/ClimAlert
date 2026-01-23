@@ -1,6 +1,4 @@
 package com.example.hurricaneai;
-import com.example.climalert.R;
-
 
 public class ChatMessage {
     private final String message;

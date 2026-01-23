@@ -15,8 +15,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
-import com.example.climalert.R;
-
 
 public class WebScraper {
     private static final String TAG = "HurricaneAI_Scraper";
