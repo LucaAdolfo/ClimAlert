@@ -19,8 +19,14 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
+import com.example.climalert.alert.parsing.EmergencyWorker;
 import com.example.climalert.meteo.MeteoCallback;
 import com.example.climalert.meteo.parsing.ArpavMeteo;
 import com.example.climalert.meteo.parsing.Previsione;
@@ -39,6 +45,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     //Prova per vedere se tutto ok!
@@ -54,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    private String regione = "Veneto"; //All avvio impostera regioneVeneto sicuramente il worker non avra la posizione
+    private static String TAG = "MainActivity";
 
 
 
@@ -68,8 +77,11 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
             if (location != null) {
                 ottieniNomeCitta(location.getLatitude(), location.getLongitude());
+                this.regione = ottieniNomeRegione(location.getLatitude(), location.getLongitude());
+
             } else {
                 txtPosizione.setText("GPS non disponibile");
+                this.regione = getLastRegione();
             }
         });
     }
@@ -102,6 +114,24 @@ public class MainActivity extends AppCompatActivity {
             txtPosizione.setText("Errore localizzazione");
         }
     }
+    private String ottieniNomeRegione(double lat, double lon) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            // trova l'indirizzo per le coordinate fornite
+            List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+
+            if (addresses != null && !addresses.isEmpty()) {
+                //trova regione
+                String regione = addresses.get(0).getAdminArea();
+                setRegioneUpdate(regione);
+                return regione;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 
     private void caricaDatiMeteoReali(String nomeCitta) {
@@ -310,6 +340,67 @@ public class MainActivity extends AppCompatActivity {
 
         mapOverlay.setOnClickListener(openMapListener);
         findViewById(R.id.mappa).setOnClickListener(openMapListener);
+        setWorkerEmergenze();
+
+    }
+    private void setWorkerEmergenze(){/*Metto worker a fare*/
+        //-devo -> prendere preferenze della ultima update e scrivere con un return la preferenza
+        //-> ho bisogno regione
+        String regione = this.regione;
+        String last_fetched_time = getLastFetchedTime();
+        Data data = new Data.Builder()
+                .putString("target_region", regione)
+                .putString("updated_time", last_fetched_time)
+                .build();
+        PeriodicWorkRequest emergencyWorkRequest =
+                new PeriodicWorkRequest.Builder(EmergencyWorker.class, 1, TimeUnit.HOURS)
+                        .setInputData(data)
+                        .setConstraints(new androidx.work.Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                        .build();
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "EmergencyAlertWork", // Un nome univoco per questo lavoro
+                ExistingPeriodicWorkPolicy.KEEP, // Se esiste già un lavoro con questo nome, non fare nulla
+                emergencyWorkRequest
+        );
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(emergencyWorkRequest.getId())
+                .observe(this, workInfo -> {
+                    if (workInfo != null) {
+                        Log.d("MainActivity", "Stato del worker cambiato: " + workInfo.getState());
+                    }
+                    // Controlla se il worker ha terminato con SUCCESSO
+                    if (workInfo != null && workInfo.getState() == androidx.work.WorkInfo.State.SUCCEEDED) {
+                        // Recupera i dati di output usando la chiave definita nel Worker
+                        String newUpdateTime = workInfo.getOutputData().getString("new_fetched_time");
+                        if (newUpdateTime != null) {
+                            Log.d("MainActivity", "Worker ha finito! Salvo il nuovo tempo di aggiornamento: " + newUpdateTime);
+                            setTimeUpdate(newUpdateTime); // Usa il tuo metodo esistente
+                        }
+                    }
+                });
+
+    }
+
+    private String getLastFetchedTime() {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        return sharedPreferences.getString("last_fetched_time", null);
+    }
+
+    private void setTimeUpdate(String date) {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("last_fetched_time",date);
+        editor.apply();
+
+    }
+    private void setRegioneUpdate(String regione) {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("regione",regione);
+        editor.apply();
+    }
+    private String getLastRegione() {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        return sharedPreferences.getString("regione", null);
     }
 
     @Override

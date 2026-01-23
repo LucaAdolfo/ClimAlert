@@ -15,13 +15,14 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.climalert.R;
+import com.tickaroo.tikxml.TikXml;
 
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okio.Buffer;
 
 public class AllerteEmergenze {
 
@@ -30,7 +31,7 @@ public class AllerteEmergenze {
     private static final String CHANNEL_NAME = "Allerte Emergenze";
     private static final String CHANNEL_DESCRIPTION= "Avvisi per emergenze in tempo reale";
 
-    public static void SendNotification(Context context, String textTitle, String textContent, int notificationId){//TODO non so se bisogna chiedere autorizzazione, cioè nel manifest ci sono le permessi
+    public static void sendNotification(Context context, String textTitle, String textContent, int notificationId){//TODO non so se bisogna chiedere autorizzazione, cioè nel manifest ci sono le permessi
         //https://developer.android.com/develop/ui/views/notifications/notification-permission?hl=it
         createNotificationChannel(context);
         Intent intent = new Intent(context, com.example.climalert.MainActivity.class);
@@ -44,10 +45,10 @@ public class AllerteEmergenze {
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
                 ;
-                ;
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            notificationManager.notify(0, builder.build());
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Nessuna autorizzazione per le notifiche");
+            return;
         }
         notificationManager.notify(notificationId, builder.build());
 
@@ -108,7 +109,7 @@ public class AllerteEmergenze {
      * @throws IOException se lancia un'eccezione di tipo IOException
      * @return null in caso che non è andato a buon fine, il body altrimenti
      */
-    public static ResponseBody fetchData() throws IOException{
+    public static String fetchData() throws IOException{
         OkHttpClient client = new OkHttpClient();
         String url = "https://feeds.meteoalarm.org/feeds/meteoalarm-legacy-atom-italy";
         Request request = new Request.Builder()
@@ -117,11 +118,16 @@ public class AllerteEmergenze {
         try (Response response = client.newCall(request).execute()) {
             if(!response.isSuccessful())
                 return null;
-            return response.body();
+            return response.body().string();
         } catch (IOException e) {
             Log.e(TAG, "Errore durante la richiesta: " + e.getMessage());
-            throw new RuntimeException(e);
+            return null;
         }
+    }
+    public static Feed parseFeed(String body) throws IOException {
+        TikXml tikXml = new TikXml.Builder().exceptionOnUnreadXml(false).build();
+        Feed feed = tikXml.read(new Buffer().writeUtf8(body), Feed.class);
+        return feed;
     }
 
 }

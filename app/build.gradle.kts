@@ -94,4 +94,11 @@ dependencies {
      */
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
+
+    /*
+    * Per WorkManager
+    * */
+    implementation("androidx.work:work-runtime:2.11.0")
+    implementation("androidx.work:work-multiprocess:2.11.0")
+
 }
