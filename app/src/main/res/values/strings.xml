@@ -61,6 +61,7 @@
     <string name="preferenze">PREFERENZE</string>
     <string name="note">NOTE</string>
     <string name="disconnetti">DISCONNETTI</string>
+    <string name="logout">Logout</string>
     <string name="elimina_account">ELIMINA ACCOUNT</string>
     <string name="gestisci_segnalazioni">GESTISCI SEGNALAZIONI</string>
     <string name="modifica_password">MODIFICA PASSWORD</string>
