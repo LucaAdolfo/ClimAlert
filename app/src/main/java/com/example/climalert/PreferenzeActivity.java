@@ -50,14 +50,6 @@ public class PreferenzeActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         // Carica lo stato salvato o imposta true come default
         boolean notificheAbilitate = preferences.getBoolean(NOTIFICATIONS_ENABLED_KEY, true);
-        switchNotifiche.setChecked(notificheAbilitate);
-
-        switchNotifiche.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Salva lo stato dello switch nelle SharedPreferences
-            SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
-            editor.putBoolean(NOTIFICATIONS_ENABLED_KEY, isChecked);
-            editor.apply();
-        });
 
         // Configurazione della mappa
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));

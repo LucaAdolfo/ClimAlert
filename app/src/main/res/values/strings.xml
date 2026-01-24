@@ -159,5 +159,11 @@
     <string name="dev_mode_wrong_password">Password errata</string>
     <string name="dev_mode_activated">Modalità sviluppatore attivata!</string>
     <string name="nessuna_allerta">Nessuna allerta rilevata</string>
+    <string name="link_utili_per_consultare_fonti_ufficiali">Link utili per consultare fonti ufficiali:</string>
+    <string name="https_meteo_arpa_veneto_it"><u>https://meteo.arpa.veneto.it/</u></string>
+    <string name="protezione_civile_regione_veneto">Protezione Civile - Regione Veneto</string>
+    <string name="https_www_regione_veneto_it_web_protezione_civile"><u>https://www.regione.veneto.it/web/protezione-civile</u></string>
+    <string name="arpav_meteo">ARPAV Meteo</string>
+    <string name="https_www_venetoambientenews_it_category_protezione_civile_le_innovazioni_pimot"><u>https://www.venetoambientenews.it/</u></string>
 
 </resources>
