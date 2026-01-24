@@ -72,7 +72,7 @@
     <string name="conferma_nuova_password">Conferma nuova password:</string>
     <string name="conferma_la_tua_nuova_password">Conferma la tua nuova password</string>
     <string name="librerie_utilizzate">Librerie utilizzate:</string>
-    <string name="librerie_usate">junit\next-juni\nespresso-core\nappcompat\nmaterial\nactivity\nconstraintlayout\nplay-services-maps\nfirebase-auth\nplay-services-location\nokhttp\nTikxml</string>
+    <string name="librerie_usate">junit\next-juni\nespresso-core\nappcompat\nmaterial\nactivity\nconstraintlayout\nplay-services-maps\nfirebase-auth\nplay-services-location\nokhttp\nTikxml\nGlide\nhttps://www.openstreetmap.org/copyright</string>
     <string name="notizie_ufficiali">NOTIZIE UFFICIALI</string>
     <string name="filtra_notizie">Filtra notizie</string>
     <string name="notifiche">Notifiche</string>
