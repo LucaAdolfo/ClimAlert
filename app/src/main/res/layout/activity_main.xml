@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.20" />
+        app:layout_constraintGuide_percent="0.15" />
 
     <TextView
         android:id="@+id/idTitle"
@@ -51,6 +51,44 @@
 
         app:layout_constraintStart_toStartOf="parent" />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/alertContainer"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="32dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerGuideline">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imgAlert"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_alert"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/lblAlert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="@string/nessuna_allerta"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/weatherContainer"
@@ -58,13 +96,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="18dp"
         android:layout_marginBottom="2dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:strokeColor="#DDDDDD"
         app:strokeWidth="1dp"
-        app:layout_constraintTop_toBottomOf="@+id/headerGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/alertContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -125,15 +163,13 @@
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="1dp"
         android:layout_marginTop="18dp"
+        android:layout_marginEnd="32dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp"
-        app:layout_constraintTop_toBottomOf="@id/weatherContainer"
-        app:layout_constraintBottom_toTopOf="@id/mappa"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weatherContainer">
 
         <org.osmdroid.views.MapView
             android:id="@+id/mapPreview"
@@ -151,25 +187,12 @@
     </androidx.cardview.widget.CardView>
 
     <Button
-        android:id="@+id/mappa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mappa"
-        android:layout_marginBottom="30dp"
-        android:elevation="8dp"
-        android:translationZ="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnSegnalazione" />
-
-    <Button
         android:id="@+id/btnSegnalazione"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="10dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:text="@string/fai_segnalazione"

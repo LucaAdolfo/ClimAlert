@@ -57,11 +57,12 @@
         android:layout_marginBottom="8dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="@string/logout"
+        android:text="@string/disconnetti"
+        android:backgroundTint="@android:color/holo_red_light"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnGestisciSegnalazioni"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
         android:id="@+id/btnGestisciSegnalazioni"
@@ -76,7 +77,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/btnLogout"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/mapPreviewContainer"

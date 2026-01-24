@@ -1,7 +1,9 @@
 package com.example.climalert;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class NotizieActivity extends AppCompatActivity {
 
     private BottomNavigationView navBar;
+    private TextView link1, link2, link3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,27 @@ public class NotizieActivity extends AppCompatActivity {
 
             //altro id
             return false;
-    });
+        });
+
+        link1 = findViewById(R.id.link1);
+        link2 = findViewById(R.id.link2);
+        link3 = findViewById(R.id.link3);
+
+        link1.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://meteo.arpa.veneto.it"));
+            startActivity(intent);
+        });
+
+        link2.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regione.veneto.it/web/protezione-civile"));
+            startActivity(intent);
+        });
+
+        link3.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.venetoambientenews.it/"));
+            startActivity(intent);
+        });
+
     }
 }
 

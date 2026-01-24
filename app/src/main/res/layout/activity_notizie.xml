@@ -40,34 +40,107 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
-    <ImageButton
-        android:id="@+id/btnFiltra"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/filtra_notizie"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_filter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/idTitle"
-        tools:ignore="MissingConstraints" />
-
-    <SearchView
-        android:id="@+id/searchNotizie"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/linkContainer"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/search_view_border"
-        android:iconifiedByDefault="false"
-        android:queryHint="Cerca notizie..."
-        app:layout_constraintBottom_toBottomOf="@id/btnFiltra"
-        app:layout_constraintEnd_toStartOf="@id/btnFiltra"
+        android:layout_height="450dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="32dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btnFiltra" />
+        app:layout_constraintTop_toBottomOf="@id/headerGuideline"
+        app:layout_constraintBottom_toTopOf="@id/navBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/lblTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="0dp"
+            android:text="@string/link_utili_per_consultare_fonti_ufficiali"
+            android:textStyle="bold"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/lblLink1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/arpav_meteo"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/lblTitle" />
+
+            <TextView
+                android:id="@+id/link1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="0dp"
+                android:text="@string/https_meteo_arpa_veneto_it"
+                android:textStyle="bold"
+                android:textColor="@color/purple_500"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/lblTitle" />
+
+            <TextView
+                android:id="@+id/lblLink2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/protezione_civile_regione_veneto"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/lblTitle" />
+
+            <TextView
+                android:id="@+id/link2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="0dp"
+                android:text="@string/https_www_regione_veneto_it_web_protezione_civile"
+                android:textStyle="bold"
+                android:textColor="@color/purple_500"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/lblTitle" />
+
+            <TextView
+                android:id="@+id/lblLink3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:text="Veneto sicuro (PIMOT)"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/lblTitle" />
+
+            <TextView
+                android:id="@+id/link3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="0dp"
+                android:text="@string/https_www_venetoambientenews_it_category_protezione_civile_le_innovazioni_pimot"
+                android:textStyle="bold"
+                android:textColor="@color/purple_500"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/lblTitle" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
