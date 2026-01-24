@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,11 +19,19 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class MainAdminActivity extends AppCompatActivity {
 
     private Button btnSegnalazioni;
-    private Button btnLogout; // Aggiunto pulsante per il logout
+    private Button btnLogout;
     private View btnMappa;
+    private FirebaseAuth mAuth;
+
+    private static final String TAG = "MainAdminActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +50,23 @@ public class MainAdminActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Gestione del pulsante di logout
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(view -> {
-            // Reindirizza alla schermata di accesso dell'admin
-            Intent intent = new Intent(MainAdminActivity.this, AccediAdminActivity.class);
-            startActivity(intent);
-            finish(); // Chiude l'activity corrente
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser(); // per sicurezza in casp lo statp è cambiato
+            if (currentUser == null) {
+                Toast.makeText(MainAdminActivity.this, "Non sei loggato!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Utente non loggato svolge disconetti account, come è arrivato?");
+                logOutUI();
+                return;
+            }
+            else {
+                FirebaseAuth.getInstance().signOut();
+                logOutUI();
+            }
+            Log.i(TAG, "Utente disconnesso");
         });
 
         btnMappa = findViewById(R.id.mapOverlay);
@@ -67,5 +86,12 @@ public class MainAdminActivity extends AppCompatActivity {
 
         btnMappa.setOnClickListener(openMapListener);
 
+    }
+
+    private void logOutUI() {
+        Intent intent = new Intent(MainAdminActivity.this, AccediActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -31,6 +32,7 @@ import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.example.climalert.alert.parsing.EmergencyWorker;
+import com.example.climalert.alert.parsing.Entry;
 import com.example.climalert.meteo.MeteoCallback;
 import com.example.climalert.meteo.parsing.ArpavMeteo;
 import com.example.climalert.meteo.parsing.Previsione;
@@ -46,6 +48,9 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -53,7 +58,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     //Prova per vedere se tutto ok!
-    private TextView txtGradi, txtPosizione;
+    private TextView txtGradi, txtPosizione, lblAlert;
     private BottomNavigationView navBar;
     private ImageButton btnImpostazioni;
     private Button btnSegnalazione;
@@ -67,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String regione = "Veneto"; //All avvio impostera regioneVeneto sicuramente il worker non avra la posizione
     private static String TAG = "MainActivity";
+    private CardView alertContainer;
 
 
 
@@ -319,13 +325,6 @@ public class MainActivity extends AppCompatActivity {
         txtGradi = findViewById(R.id.previsioniPosizione);
         imgMeteo = findViewById(R.id.meteoOggi);
 
-        Button bottoneMappa = findViewById(R.id.mappa);
-        bottoneMappa.setOnClickListener(view -> {
-                Log.d("main", "bottone premuto mappa");
-                Intent intent = new Intent(this, MappaActivity.class);
-                startActivity(intent);
-
-                });
 
         /*Codice per bordi schermo di defualt lascia cosi*/
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -352,8 +351,35 @@ public class MainActivity extends AppCompatActivity {
         };
 
         mapOverlay.setOnClickListener(openMapListener);
-        findViewById(R.id.mappa).setOnClickListener(openMapListener);
         setWorkerEmergenze();
+
+        lblAlert = findViewById(R.id.lblAlert);
+        alertContainer = findViewById(R.id.alertContainer);
+
+        Entry entry = EmergencyWorker.ultimo_Aggiornamento;
+
+        if(entry != null) {
+            String allerta = "Allerta emanata " + castData(entry.getUpdated()) + "\nTipo: " + entry.getEvent() + "\nUrgenza: " + entry.getUrgency();
+            lblAlert.setText(allerta);
+            alertContainer.setCardBackgroundColor(android.graphics.Color.RED);
+            lblAlert.setTextColor(android.graphics.Color.WHITE);
+        }
+        else {
+            lblAlert.setText("Nessuna allerta rilevata");
+            alertContainer.setCardBackgroundColor(android.graphics.Color.WHITE);
+            lblAlert.setTextColor(android.graphics.Color.BLACK);
+        }
+    }
+
+    private String castData(String data){
+        try {
+            OffsetDateTime odt = OffsetDateTime.parse(data);
+            OffsetDateTime dataLocale = odt.atZoneSameInstant(ZoneId.systemDefault()).toOffsetDateTime();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM, HH:mm", Locale.ITALIAN);
+            return dataLocale.format(formatter);
+        } catch (Exception e) {
+            return data; // In caso di errore ritorna l'originale
+        }
 
     }
     private void setWorkerEmergenze(){/*Metto worker a fare*/

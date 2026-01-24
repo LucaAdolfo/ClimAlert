@@ -47,8 +47,6 @@ public class PreferenzeActivity extends AppCompatActivity {
             finish();
         });
 
-        // Gestione dello switch per le notifiche
-        switchNotifiche = findViewById(R.id.switchNotifiche);
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         // Carica lo stato salvato o imposta true come default
         boolean notificheAbilitate = preferences.getBoolean(NOTIFICATIONS_ENABLED_KEY, true);
