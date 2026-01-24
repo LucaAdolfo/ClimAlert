@@ -19,8 +19,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/rounded_bottom_header"
-        android:gravity="center_vertical|start"
-        android:paddingStart="175dp"
+        android:gravity="center"
         android:text="@string/tema"
         android:textSize="35sp"
         android:textStyle="bold"
@@ -49,49 +48,50 @@
 
     <View
         android:id="@+id/rectangle_light"
-        android:layout_width="150dp"
+        android:layout_width="0dp"
         android:layout_height="250dp"
         android:background="@drawable/rectangle_light"
-        android:layout_marginStart="45dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="50dp"
-
+        app:layout_constraintEnd_toStartOf="@+id/rectangle_dark"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerGuideline"/>
+        app:layout_constraintTop_toBottomOf="@id/headerGuideline" />
 
     <View
         android:id="@+id/rectangle_dark"
-        android:layout_width="150dp"
+        android:layout_width="0dp"
         android:layout_height="250dp"
         android:background="@drawable/rectangle_dark"
-        android:layout_marginEnd="45dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="50dp"
 
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/rectangle_light"
         app:layout_constraintTop_toBottomOf="@id/headerGuideline"/>
 
     <ImageView
         android:id="@+id/light_theme"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginStart="70dp"
+        android:layout_marginTop="50dp"
         android:src="@drawable/sole"
         app:tint="#ffde41"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerGuideline"
+        app:layout_constraintEnd_toEndOf="@+id/rectangle_light"
+        app:layout_constraintStart_toStartOf="@+id/rectangle_light"
+        app:layout_constraintTop_toTopOf="@+id/rectangle_light"
         tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/dark_theme"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="110dp"
-        android:layout_marginEnd="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="50dp"
         android:src="@drawable/luna"
         app:tint="#FFEB3B"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerGuideline"
+        app:layout_constraintEnd_toEndOf="@+id/rectangle_dark"
+        app:layout_constraintStart_toStartOf="@+id/rectangle_dark"
+        app:layout_constraintTop_toTopOf="@+id/rectangle_dark"
         tools:ignore="ContentDescription" />
 
     <RadioGroup
@@ -127,6 +127,22 @@
             app:layout_constraintTop_toBottomOf="@id/dark_theme" />
 
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="30dp"
+        android:textSize="14dp"
+        android:text="Seleziona il tema che preferisci utilizzare nell'applicazione."
+        android:textStyle="italic"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rectangle_light" />
+
 
 
 

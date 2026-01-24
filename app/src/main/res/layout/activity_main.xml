@@ -13,23 +13,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.15" />
+        app:layout_constraintGuide_percent="0.20" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/idTitle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/rounded_bottom_header"
-        android:gravity="center_vertical|start"
-        android:paddingStart="140dp"
-        android:paddingEnd="50dp"
-        android:text="@string/benvenuto"
-        android:textSize="40sp"
-        android:textStyle="bold"
         android:elevation="8dp"
+        android:gravity="center"
+        android:paddingStart="50dp"
+        android:paddingEnd="20dp"
+        android:text="@string/benvenuto"
+        android:textStyle="bold"
         android:translationZ="4dp"
+
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="24sp"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeStepGranularity="2sp"
+
         app:layout_constraintBottom_toTopOf="@id/headerGuideline"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,7 +56,6 @@
         app:layout_constraintBottom_toBottomOf="@id/idTitle"
 
         app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/alertContainer"
         android:layout_width="0dp"

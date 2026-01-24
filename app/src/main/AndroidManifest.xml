@@ -112,6 +112,7 @@
             android:exported="false" />
         <activity
             android:name="com.example.hurricaneai.ChatActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:exported="false" />
         <activity
             android:name="com.example.hurricaneai.DeveloperActivity"

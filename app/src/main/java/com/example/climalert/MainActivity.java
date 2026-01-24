@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
         Entry entry = EmergencyWorker.ultimo_Aggiornamento;
 
         if(entry != null) {
-            String allerta = "Allerta emanata " + castData(entry.getUpdated()) + "\nTipo: " + entry.getEvent() + "\nUrgenza: " + entry.getUrgency();
+            String allerta = "Allerta emanata " + castData(entry.getUpdated()) + "\nPrevista Per: " + castData(entry.getOnset()) + "\nTipo: " + entry.getEvent() + "\nUrgenza: " + entry.getUrgency();
             lblAlert.setText(allerta);
             alertContainer.setCardBackgroundColor(android.graphics.Color.RED);
             lblAlert.setTextColor(android.graphics.Color.WHITE);
