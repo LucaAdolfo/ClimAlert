@@ -2,8 +2,8 @@ package com.example.climalert;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +14,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -24,6 +27,7 @@ public class SegnalazioniAdminActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private LinearLayout containerSegnalazioniAdmin;
 
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,10 @@ public class SegnalazioniAdminActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
+
+        checkIsAdmin();
 
         btnIndietro = findViewById(R.id.btnIndietro);
         btnIndietro.setOnClickListener(view -> {
@@ -45,7 +53,7 @@ public class SegnalazioniAdminActivity extends AppCompatActivity {
 
         containerSegnalazioniAdmin = findViewById(R.id.containerSegnalazioni);
         tabLayout = findViewById(R.id.tabLayoutAdmin);
-        database = FirebaseFirestore.getInstance();
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -139,6 +147,10 @@ public class SegnalazioniAdminActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> {
                         android.widget.Toast.makeText(this, "Errore: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                    }).addOnFailureListener(e -> {
+                        Log.e("FIRESTORE_DELETE", "Errore durante l'eliminazione: " + e.getMessage());
+
+                        android.widget.Toast.makeText(this, "Errore: Non hai i permessi o problema di rete", android.widget.Toast.LENGTH_LONG).show();
                     });
         });
 
@@ -154,6 +166,9 @@ public class SegnalazioniAdminActivity extends AppCompatActivity {
                     .addOnSuccessListener(aVoid -> {
                         containerSegnalazioniAdmin.removeView(marginContainer);
                         android.widget.Toast.makeText(this, "Eliminata!", android.widget.Toast.LENGTH_SHORT).show();
+                    }).addOnFailureListener(e -> {
+                        Log.e("FIRESTORE_DELETE", "Errore durante l'eliminazione: " + e.getMessage());
+                        android.widget.Toast.makeText(this, "Errore: Non hai i permessi o problema di rete", android.widget.Toast.LENGTH_LONG).show();
                     });
         });
 
@@ -164,5 +179,32 @@ public class SegnalazioniAdminActivity extends AppCompatActivity {
         marginContainer.addView(riga);
 
         containerSegnalazioniAdmin.addView(marginContainer);
+    }
+    private void emergencyRedirect(){
+        Intent intent = new Intent(SegnalazioniAdminActivity.this, AccediActivity.class);
+        startActivity(intent);
+        finish();
+    }
+    private void checkIsAdmin(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null){
+            emergencyRedirect();
+            return;
+        }
+        String id = user.getUid();
+        DocumentReference docRef = database.collection("users").document(id);
+        docRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String username = documentSnapshot.getString("tipo_utente");
+                if (!username.equals("admin")) {
+                    emergencyRedirect();
+                }
+            }else{
+                Log.e("AUTH", "Documento utente non trovato!");
+                emergencyRedirect();
+            }
+        });
+
+
     }
 }

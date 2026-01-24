@@ -2,6 +2,7 @@ package com.example.climalert;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,7 +46,19 @@ public class AccediActivity extends AppCompatActivity {
         btnAccedi.setOnClickListener(view -> {
             String email = email_text.getText().toString().trim();
             String password = password_text.getText().toString().trim();
+            if(email.toLowerCase().contains("admin")){
+                Log.w(TAG,"Tentativo di accesso da schermata sbaglaita con nome admin");
+                Toast.makeText(AccediActivity.this, "Email non consentita", Toast.LENGTH_SHORT).show();
+                startLoginCountdown(3000);
+                return;
+            }
+            if(email.isEmpty() || password.isEmpty() || email.contains(" ") || password.contains(" ")){
+                Toast.makeText(AccediActivity.this, "Compilare tutti i campi", Toast.LENGTH_SHORT).show();
+                startLoginCountdown(3000);
+              return;
+            }else{
             emailPasswordLogin(email, password);
+            }
         });
 
         //registrati
@@ -91,14 +104,13 @@ public class AccediActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                        if (task.isSuccessful()) {//riuscito
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             loginSuccesUI();
-                        } else {
-                            // If sign in fails, display a message to the user.
+                        } else {//fallisce
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            startLoginCountdown(3000);
                             Toast.makeText(AccediActivity.this, "Credenziali sbagliate",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -111,18 +123,34 @@ public class AccediActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            //riuscito
                             Log.d(TAG, "signInAnonymously:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             loginSuccesUI();
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // fallisce
                             Log.w(TAG, "signInAnonymously:failure", task.getException());
                             Toast.makeText(AccediActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+    private void startLoginCountdown(long millisInFuture) {
+        btnAccedi.setEnabled(false); // Disabilita il tasto
+
+        new CountDownTimer(millisInFuture, 1000) { // 1000 ogni quanto il metodo on tick viene chiamato
+
+            public void onTick(long millisUntilFinished) {
+                // Aggiorna il testo del bottone con i secondi rimanenti
+                btnAccedi.setText("Riprova tra: " + millisUntilFinished / 1000 + "s");
+            }
+
+            public void onFinish() {
+                btnAccedi.setEnabled(true); // Riabilita il tasto
+                btnAccedi.setText("Accedi"); // Ripristina il testo originale
+            }
+        }.start();
     }
 
 }

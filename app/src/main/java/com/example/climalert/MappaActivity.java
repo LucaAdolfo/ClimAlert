@@ -5,8 +5,6 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -106,6 +104,7 @@ public class MappaActivity extends AppCompatActivity {
 
         });
 
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -134,40 +133,41 @@ public class MappaActivity extends AppCompatActivity {
 
     private void caricaSegnalazioni() {
         db.collection("segnalazioni")
-                .limit(50) // Limite per non sovraccaricare la mappa
+                .limit(50)
+                .whereEqualTo("stato", "accettata")
                 .get()
                 .addOnSuccessListener(query -> {
-                    for (QueryDocumentSnapshot doc : query) {
-                        Double lat = doc.getDouble("lat");
-                        Double lon = doc.getDouble("lon");
-                        if (lat == null || lon == null) continue;
+                    for (QueryDocumentSnapshot doc : query) { //query ha gli elementi trovati
 
-                        String tipo = doc.getString("tipo");
-                        String descrizione = doc.getString("descrizione");
+                            Double lat = doc.getDouble("lat");
+                            Double lon = doc.getDouble("lon");
+                            if (lat == null || lon == null) continue;
 
-                        GeoPoint p = new GeoPoint(lat, lon);
+                            String tipo = doc.getString("tipo");
+                            String descrizione = doc.getString("descrizione");
 
-                        // Creo un marker per la segnalazione
-                        Marker marker = new Marker(map);
-                        marker.setPosition(p);
-                        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                            GeoPoint p = new GeoPoint(lat, lon);
 
-                        // Ottengo l'icona di base e la coloro in base al tipo di segnalazione
-                        Drawable iconaSegnalazione = ContextCompat.getDrawable(this, R.drawable.ic_location);
-                        if (iconaSegnalazione != null) {
-                            iconaSegnalazione = iconaSegnalazione.mutate(); // Rendo l'icona modificabile
-                            int color = getColorForTipo(tipo);
-                            iconaSegnalazione.setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN);
-                            marker.setIcon(iconaSegnalazione);
+                            //Creo un pin sulla mappa
+                            Marker marker = new Marker(map);
+                            marker.setPosition(p);
+                            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+                            android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
+                            if (iconaCustom != null) {
+                                iconaCustom = iconaCustom.mutate();
+
+                                iconaCustom.setColorFilter(android.graphics.Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
+
+                                marker.setIcon(iconaCustom);
+                            }
+
+                            marker.setTitle(tipo != null ? tipo : "Segnalazione");
+                            marker.setSubDescription(descrizione != null ? descrizione : "");
+
+                            map.getOverlays().add(marker);
                         }
-
-                        // Imposto titolo e descrizione del marker
-                        marker.setTitle(tipo != null ? tipo : "Segnalazione");
-                        marker.setSubDescription(descrizione != null ? descrizione : "");
-
-                        map.getOverlays().add(marker);
-                    }
-                    map.invalidate(); // Aggiorno la mappa per mostrare i nuovi marker
+                    map.invalidate();
                 })
                 .addOnFailureListener(e -> Log.e("MAPPA", "Errore caricamento segnalazioni: " + e.getMessage()));
     }

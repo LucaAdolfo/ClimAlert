@@ -47,6 +47,24 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnMes
         sendButton = findViewById(R.id.sendButton);
         toolbar.setNavigationOnClickListener(v -> finish());
 
+        messageInput.setOnClickListener(v -> {
+            chatRecyclerView.postDelayed(() -> {
+                if (chatMessages.size() > 0) {
+                    chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+                }
+            }, 200);
+        });
+
+        messageInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                chatRecyclerView.postDelayed(() -> {
+                    if (chatMessages.size() > 0) {
+                        chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+                    }
+                }, 200);
+            }
+        });
+
         chatMessages = new ArrayList<>();
         chatAdapter = new ChatAdapter(chatMessages, this);
         

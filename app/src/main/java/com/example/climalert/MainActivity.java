@@ -1,9 +1,12 @@
 package com.example.climalert;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -16,11 +19,20 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
+import com.example.climalert.alert.parsing.EmergencyWorker;
+import com.example.climalert.alert.parsing.Entry;
 import com.example.climalert.meteo.MeteoCallback;
 import com.example.climalert.meteo.parsing.ArpavMeteo;
 import com.example.climalert.meteo.parsing.Previsione;
@@ -29,20 +41,26 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     //Prova per vedere se tutto ok!
-    private TextView txtGradi, txtPosizione;
+    private TextView txtGradi, txtPosizione, lblAlert;
     private BottomNavigationView navBar;
     private ImageButton btnImpostazioni;
     private Button btnSegnalazione;
@@ -54,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    private String regione = "Veneto"; //All avvio impostera regioneVeneto sicuramente il worker non avra la posizione
+    private static String TAG = "MainActivity";
+    private CardView alertContainer;
 
 
 
@@ -68,8 +89,11 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
             if (location != null) {
                 ottieniNomeCitta(location.getLatitude(), location.getLongitude());
+                this.regione = ottieniNomeRegione(location.getLatitude(), location.getLongitude());
+                setWorkerEmergenze();
             } else {
                 txtPosizione.setText("GPS non disponibile");
+                this.regione = getLastRegione();
             }
         });
     }
@@ -102,6 +126,24 @@ public class MainActivity extends AppCompatActivity {
             txtPosizione.setText("Errore localizzazione");
         }
     }
+    private String ottieniNomeRegione(double lat, double lon) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            // trova l'indirizzo per le coordinate fornite
+            List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+
+            if (addresses != null && !addresses.isEmpty()) {
+                //trova regione
+                String regione = addresses.get(0).getAdminArea();
+                setRegioneUpdate(regione);
+                return regione;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 
     private void caricaDatiMeteoReali(String nomeCitta) {
@@ -196,6 +238,15 @@ public class MainActivity extends AppCompatActivity {
 
         fusedLocationClient = com.google.android.gms.location.LocationServices.getFusedLocationProviderClient(this);
         recuperaPosizioneGPS();
+        //CHiedo permesso per notifiche!
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
@@ -276,13 +327,6 @@ public class MainActivity extends AppCompatActivity {
         txtGradi = findViewById(R.id.previsioniPosizione);
         imgMeteo = findViewById(R.id.meteoOggi);
 
-        Button bottoneMappa = findViewById(R.id.mappa);
-        bottoneMappa.setOnClickListener(view -> {
-                Log.d("main", "bottone premuto mappa");
-                Intent intent = new Intent(this, MappaActivity.class);
-                startActivity(intent);
-
-                });
 
         /*Codice per bordi schermo di defualt lascia cosi*/
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -309,9 +353,127 @@ public class MainActivity extends AppCompatActivity {
         };
 
         mapOverlay.setOnClickListener(openMapListener);
-        findViewById(R.id.mappa).setOnClickListener(openMapListener);
+        setWorkerEmergenze();
+
+        lblAlert = findViewById(R.id.lblAlert);
+        alertContainer = findViewById(R.id.alertContainer);
+
+        Entry entry = getEntry();
+
+        if(entry != null) {
+            String allerta = "Allerta emanata " + castData(entry.getUpdated()) + "\nPrevista Per: " + castData(entry.getOnset()) + "\nTipo: " + entry.getEvent() + "\nUrgenza: " + entry.getUrgency();
+            lblAlert.setText(allerta);
+            alertContainer.setCardBackgroundColor(android.graphics.Color.RED);
+            lblAlert.setTextColor(android.graphics.Color.WHITE);
+        }
+        else {
+            lblAlert.setText("Nessuna allerta rilevata");
+            alertContainer.setCardBackgroundColor(android.graphics.Color.WHITE);
+            lblAlert.setTextColor(android.graphics.Color.BLACK);
+        }
     }
 
+    private String castData(String data){
+        try {
+            OffsetDateTime odt = OffsetDateTime.parse(data);
+            OffsetDateTime dataLocale = odt.atZoneSameInstant(ZoneId.systemDefault()).toOffsetDateTime();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM, HH:mm", Locale.ITALIAN);
+            return dataLocale.format(formatter);
+        } catch (Exception e) {
+            return data; // In caso di errore ritorna l'originale
+        }
+
+    }
+    private void setWorkerEmergenze(){/*Metto worker a fare*/
+        //-devo -> prendere preferenze della ultima update e scrivere con un return la preferenza
+        //-> ho bisogno regione
+        String regione = this.regione;
+        String last_fetched_time = getLastFetchedTime();
+        Data data = new Data.Builder()
+                .putString("target_region", regione)
+                .putString("updated_time", last_fetched_time)
+                .build();
+        PeriodicWorkRequest emergencyWorkRequest =
+                new PeriodicWorkRequest.Builder(EmergencyWorker.class, 30, TimeUnit.MINUTES)
+                        .setInputData(data)
+                        .setConstraints(new androidx.work.Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                        .build();
+        //OneTimeWorkRequest emergencyWorkRequest = new OneTimeWorkRequest.Builder(EmergencyWorker.class).setInputData(data).setInitialDelay(5, TimeUnit.SECONDS).build();
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "EmergencyAlertWork", // Un nome univoco per questo lavoro
+                ExistingPeriodicWorkPolicy.KEEP, // Se esiste già un lavoro con questo nome, non fare nulla
+                emergencyWorkRequest
+        );
+//        WorkManager.getInstance(this).enqueue(emergencyWorkRequest);
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(emergencyWorkRequest.getId())
+                .observe(this, workInfo -> {
+                    if (workInfo != null) {
+                        Log.d("MainActivity", "Stato del worker cambiato: " + workInfo.getState());
+                    }
+                    // Controlla se il worker ha terminato con SUCCESSO
+                    if (workInfo != null && workInfo.getState() == androidx.work.WorkInfo.State.SUCCEEDED) {
+                        // Recupera i dati di output usando la chiave definita nel Worker
+                        String newUpdateTime = workInfo.getOutputData().getString("new_fetched_time");
+                        if (newUpdateTime != null) {
+                            Log.d("MainActivity", "Worker ha finito! Salvo il nuovo tempo di aggiornamento: " + newUpdateTime);
+                            setTimeUpdate(newUpdateTime); // Usa il tuo metodo esistente
+                        }
+                    }
+                });
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // L'utente ha appena cliccato "Consenti"!
+                // Ora possiamo chiamare di nuovo il GPS con successo
+                recuperaPosizioneGPS();
+            } else {
+                // L'utente ha negato
+                txtPosizione.setText("Permesso negato");
+            }
+        }
+    }
+
+    private String getLastFetchedTime() {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        return sharedPreferences.getString("last_fetched_time", null);
+    }
+
+    private void setTimeUpdate(String date) {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("last_fetched_time",date);
+        editor.apply();
+
+    }
+    private void setRegioneUpdate(String regione) {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("regione",regione);
+        editor.apply();
+    }
+    private String getLastRegione() {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        return sharedPreferences.getString("regione", null);
+    }
+    private Entry getEntry() {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        String json = sharedPreferences.getString("ultima_entry", null);
+        if(json==null){
+            return null;
+        }
+        try {
+            Gson gson = new Gson();
+            return gson.fromJson(json, Entry.class);
+        } catch (Exception e) {
+            Log.e("GSON", "Errore nel parsing dell'entry salvata: " + e.getMessage());
+            return null;
+        }
+    }
     @Override
     protected void onResume(){
         super.onResume();
