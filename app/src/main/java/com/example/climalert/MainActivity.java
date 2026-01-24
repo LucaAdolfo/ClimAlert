@@ -41,7 +41,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             if (location != null) {
                 ottieniNomeCitta(location.getLatitude(), location.getLongitude());
                 this.regione = ottieniNomeRegione(location.getLatitude(), location.getLongitude());
-
+                setWorkerEmergenze();
             } else {
                 txtPosizione.setText("GPS non disponibile");
                 this.regione = getLastRegione();
@@ -356,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
         lblAlert = findViewById(R.id.lblAlert);
         alertContainer = findViewById(R.id.alertContainer);
 
-        Entry entry = EmergencyWorker.ultimo_Aggiornamento;
+        Entry entry = getEntry();
 
         if(entry != null) {
             String allerta = "Allerta emanata " + castData(entry.getUpdated()) + "\nPrevista Per: " + castData(entry.getOnset()) + "\nTipo: " + entry.getEvent() + "\nUrgenza: " + entry.getUrgency();
@@ -420,6 +422,21 @@ public class MainActivity extends AppCompatActivity {
                 });
 
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // L'utente ha appena cliccato "Consenti"!
+                // Ora possiamo chiamare di nuovo il GPS con successo
+                recuperaPosizioneGPS();
+            } else {
+                // L'utente ha negato
+                txtPosizione.setText("Permesso negato");
+            }
+        }
+    }
 
     private String getLastFetchedTime() {
         SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
@@ -443,7 +460,20 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
         return sharedPreferences.getString("regione", null);
     }
-
+    private Entry getEntry() {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        String json = sharedPreferences.getString("ultima_entry", null);
+        if(json==null){
+            return null;
+        }
+        try {
+            Gson gson = new Gson();
+            return gson.fromJson(json, Entry.class);
+        } catch (Exception e) {
+            Log.e("GSON", "Errore nel parsing dell'entry salvata: " + e.getMessage());
+            return null;
+        }
+    }
     @Override
     protected void onResume(){
         super.onResume();

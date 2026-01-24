@@ -1,12 +1,15 @@
 package com.example.climalert.alert.parsing;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -65,6 +68,7 @@ public class EmergencyWorker extends Worker {
                         entry.getEvent() != null ? entry.getEvent() : "Non specificato",
                         entry.getUrgency() != null ? entry.getUrgency() : "Ordinaria"
                 );
+                setEntryUpdate(entry);
                 AllerteEmergenze.sendNotification(getApplicationContext(), "Allerta per"+entry.getAreaDesc(),allerta, entry.getId().hashCode());
                 Data dataoutput= new Data.Builder().putString("new_fetched_time", entry.getUpdated()).build();
                 return Result.success(dataoutput); //C'è qualcosa da aggiornare!
@@ -100,6 +104,16 @@ public class EmergencyWorker extends Worker {
         } catch (Exception e) {
             return data; // In caso di errore ritorna l'originale
         }
+
+    }
+    private void setEntryUpdate(Entry entry) {
+        Gson gson = new Gson();
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("EmergencyAlert", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String json = gson.toJson(entry);
+        editor.putString("ultima_entry", json);
+        sharedPreferences.edit().putString("ultima_entry", json).apply();
+        editor.apply();
 
     }
 
