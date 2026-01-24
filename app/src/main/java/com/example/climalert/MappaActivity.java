@@ -1,23 +1,18 @@
 package com.example.climalert;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static java.security.AccessController.getContext;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -26,19 +21,19 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
 import java.util.ArrayList;
-import org.osmdroid.views.overlay.Marker;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class MappaActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
@@ -52,7 +47,6 @@ public class MappaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mappa);
         db = FirebaseFirestore.getInstance();
 
@@ -73,9 +67,7 @@ public class MappaActivity extends AppCompatActivity {
         map.setMultiTouchControls(true);
         caricaSegnalazioni();
         String[] permissions = new String[]{
-                // if you need to show the current location, uncomment the line below
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                // WRITE_EXTERNAL_STORAGE is required in order to show the map
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
         requestPermissionsIfNecessary(permissions);
@@ -95,28 +87,24 @@ public class MappaActivity extends AppCompatActivity {
                         // Dopo aver trovato la posizione, possiamo smettere di ascoltare per risparmiare batteria
                         myLocation.stopLocationProvider();
 
-
                         Marker userMarker = new Marker(map);
                         userMarker.setPosition(userLocation);
                         map.getOverlays().add(userMarker);
-                        userMarker.setTitle("You");
+                        userMarker.setTitle("Tu sei qui");
                         userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                        //userMarker.getIcon();//TODO
 
-                        android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(MappaActivity.this, R.drawable.ic_location);
-                        if (iconaCustom != null) {
-                            iconaCustom = iconaCustom.mutate();
-
-                            iconaCustom.setColorFilter(android.graphics.Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
-
-                            userMarker.setIcon(iconaCustom);
+                        // Imposta un'icona personalizzata per la posizione dell'utente (rossa)
+                        Drawable userIcon = ContextCompat.getDrawable(MappaActivity.this, R.drawable.ic_location);
+                        if (userIcon != null) {
+                            userIcon = userIcon.mutate();
+                            userIcon.setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+                            userMarker.setIcon(userIcon);
                         }
                     });
                 }
             }
 
-        }); //TODO Occhio
-
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -125,71 +113,31 @@ public class MappaActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().save(this, prefs);
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults); // Non dimenticare questa chiamata
-
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
-                // Il primo (e in questo caso unico) permesso è stato concesso.
-                Log.d("MappaActivity", "Permesso concesso dall'utente.");
-                // La mappa dovrebbe funzionare correttamente.
-            } else {
-                // Il permesso è stato negato.
-                Log.w("MappaActivity", "Permesso negato dall'utente.");
-                // Mostra un messaggio per informare l'utente.
-                Log.w("MappaActivity", "Permesso di scrittura negato. La mappa potrebbe non funzionare offline.");
-            }
+    // Funzione per ottenere un colore diverso in base al tipo di segnalazione
+    private int getColorForTipo(String tipo) {
+        if (tipo == null) {
+            return Color.GRAY; // Colore di default per tipo non specificato
         }
-    }
-
-    private void requestPermissionsIfNecessary(String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission)
-                    != PERMISSION_GRANTED) {
-                // Permission is not granted
-                permissionsToRequest.add(permission);
-            }
-        }
-        if (!permissionsToRequest.isEmpty()) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        switch (tipo.toLowerCase()) {
+            case "incendio":
+                return Color.RED;
+            case "allagamento":
+                return Color.BLUE;
+            case "frana":
+                return Color.rgb(139, 69, 19); // Marrone
+            case "incidente stradale":
+                return Color.YELLOW;
+            default:
+                return Color.GREEN; // Colore per altre segnalazioni
         }
     }
 
     private void caricaSegnalazioni() {
-        //Prendo la collezione di segnalazioni (impostato limite 50 evitare rallentamnenti)
-        //TODO vedere se metterne di più
         db.collection("segnalazioni")
-                .limit(50)
+                .limit(50) // Limite per non sovraccaricare la mappa
                 .get()
                 .addOnSuccessListener(query -> {
-                    for (QueryDocumentSnapshot doc : query) { //query ha gli elementi trovati
-
+                    for (QueryDocumentSnapshot doc : query) {
                         Double lat = doc.getDouble("lat");
                         Double lon = doc.getDouble("lon");
                         if (lat == null || lon == null) continue;
@@ -199,33 +147,62 @@ public class MappaActivity extends AppCompatActivity {
 
                         GeoPoint p = new GeoPoint(lat, lon);
 
-                        //Creo un pin sulla mappa
+                        // Creo un marker per la segnalazione
                         Marker marker = new Marker(map);
                         marker.setPosition(p);
                         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
-                        android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
-                        if (iconaCustom != null) {
-                            iconaCustom = iconaCustom.mutate();
-
-                            iconaCustom.setColorFilter(android.graphics.Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
-
-                            marker.setIcon(iconaCustom);
+                        // Ottengo l'icona di base e la coloro in base al tipo di segnalazione
+                        Drawable iconaSegnalazione = ContextCompat.getDrawable(this, R.drawable.ic_location);
+                        if (iconaSegnalazione != null) {
+                            iconaSegnalazione = iconaSegnalazione.mutate(); // Rendo l'icona modificabile
+                            int color = getColorForTipo(tipo);
+                            iconaSegnalazione.setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN);
+                            marker.setIcon(iconaSegnalazione);
                         }
 
+                        // Imposto titolo e descrizione del marker
                         marker.setTitle(tipo != null ? tipo : "Segnalazione");
                         marker.setSubDescription(descrizione != null ? descrizione : "");
 
                         map.getOverlays().add(marker);
                     }
-                    map.invalidate();
+                    map.invalidate(); // Aggiorno la mappa per mostrare i nuovi marker
                 })
                 .addOnFailureListener(e -> Log.e("MAPPA", "Errore caricamento segnalazioni: " + e.getMessage()));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        map.onResume();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        map.onPause();
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length == 0 || grantResults[0] != PERMISSION_GRANTED) {
+                Log.w("MappaActivity", "Permesso di scrittura negato. La mappa potrebbe non funzionare offline.");
+            }
+        }
+    }
 
+    private void requestPermissionsIfNecessary(String[] permissions) {
+        ArrayList<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission);
+            }
+        }
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[0]), REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
 }
-
-
