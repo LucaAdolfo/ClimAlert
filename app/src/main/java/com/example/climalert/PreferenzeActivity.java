@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +23,7 @@ import org.osmdroid.views.MapView;
 public class PreferenzeActivity extends AppCompatActivity {
 
     private ImageButton btnIndietro;
-    private SwitchCompat switchNotifiche;
-    private MapView mapSelection;
+    private Spinner spinnerZona;
 
     // Definizioni per SharedPreferences
     public static final String PREFS_NAME = "ClimAlertPrefs";
@@ -51,14 +52,10 @@ public class PreferenzeActivity extends AppCompatActivity {
         // Carica lo stato salvato o imposta true come default
         boolean notificheAbilitate = preferences.getBoolean(NOTIFICATIONS_ENABLED_KEY, true);
 
-        // Configurazione della mappa
-        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        mapSelection = findViewById(R.id.mapSelection);
-        mapSelection.setTileSource(TileSourceFactory.MAPNIK);
-        mapSelection.setMultiTouchControls(true);
-        mapSelection.getController().setZoom(12.0);
-        // Imposta un punto di partenza predefinito (Venezia)
-        GeoPoint startPoint = new GeoPoint(45.4408, 12.3155);
-        mapSelection.getController().setCenter(startPoint);
+        spinnerZona = findViewById(R.id.spinnerZona);
+        String[] opzioni = {"Belluno e Prealpi orientali", "Treviso e pianura orientale", "Venezia e laguna", "Vicenza e pedemontana", "Padova e pianura centrale", "Rovigo e pianura meridionale", "Verona e pedemontana"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opzioni);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerZona.setAdapter(adapter);
     }
 }
