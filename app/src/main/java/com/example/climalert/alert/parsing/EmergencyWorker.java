@@ -23,6 +23,7 @@ public class EmergencyWorker extends Worker {
     /** Vuole che gli passi due variabili: target_region e updated_time, target_region la regione che deve andare a visitare e updated time è il tempo del ultimo aggiornamento
      * @return La data di aggiornamento se è nuova, null altriemnti!
     * **/
+    public static Entry ultimo_Aggiornamento=null;
     @NonNull
     @Override
     public Result doWork() {
@@ -52,6 +53,7 @@ public class EmergencyWorker extends Worker {
             }
             String targetRegion = getInputData().getString("target_region");
             Entry entry = feed.getEntry(targetRegion);
+            ultimo_Aggiornamento = entry;
             if (entry == null){
                 Log.e(TAG, "Nessuna regione trovata per EmergencyWorker dal parsing");
                 return Result.success(); // Non c'è la regione che cerchiamo
