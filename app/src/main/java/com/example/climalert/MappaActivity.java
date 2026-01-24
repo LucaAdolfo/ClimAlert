@@ -33,7 +33,6 @@ import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MappaActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
@@ -180,10 +179,11 @@ public class MappaActivity extends AppCompatActivity {
         //TODO vedere se metterne di più
         db.collection("segnalazioni")
                 .limit(50)
+                .whereEqualTo("stato", "accettata")
                 .get()
                 .addOnSuccessListener(query -> {
                     for (QueryDocumentSnapshot doc : query) { //query ha gli elementi trovati
-                        if(!Objects.equals(doc.getString("stato"), "in attesa")) {
+
                             Double lat = doc.getDouble("lat");
                             Double lon = doc.getDouble("lon");
                             if (lat == null || lon == null) continue;
@@ -212,7 +212,6 @@ public class MappaActivity extends AppCompatActivity {
 
                             map.getOverlays().add(marker);
                         }
-                    }
                     map.invalidate();
                 })
                 .addOnFailureListener(e -> Log.e("MAPPA", "Errore caricamento segnalazioni: " + e.getMessage()));

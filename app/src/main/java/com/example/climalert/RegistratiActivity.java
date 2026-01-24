@@ -2,6 +2,7 @@ package com.example.climalert;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -119,7 +120,12 @@ public class RegistratiActivity extends AppCompatActivity {
             String password = edit_password.getText().toString().trim();
             String confermaPassword = edit_conferma_password.getText().toString().trim();
             String username = edit_username.getText().toString().trim();
-
+            if(email.toLowerCase().contains("admin") || username.toLowerCase().contains("admin")){
+                Log.w(TAG,"Tentativo di registrazione da schermata sbaglaita con nome admin");
+                Toast.makeText(RegistratiActivity.this, "Email o username non consentita", Toast.LENGTH_SHORT).show();
+                startLoginCountdown(3000);
+                return;
+            }
             if (!password.equals(confermaPassword)) {
                 Toast.makeText(RegistratiActivity.this, "Le password non corrispondono", Toast.LENGTH_SHORT).show();
                 edit_password.setText("");
@@ -206,7 +212,22 @@ public class RegistratiActivity extends AppCompatActivity {
     private boolean checkPassword(String password){
         return !password.isEmpty() && password.length() >= 6;
     }
+    private void startLoginCountdown(long millisInFuture) {
+        btnRegistrati.setEnabled(false); // Disabilita il tasto
 
+        new CountDownTimer(millisInFuture, 1000) { // 1000 ogni quanto il metodo on tick viene chiamato
+
+            public void onTick(long millisUntilFinished) {
+                // Aggiorna il testo del bottone con i secondi rimanenti
+                btnRegistrati.setText("Riprova tra: " + millisUntilFinished / 1000 + "s");
+            }
+
+            public void onFinish() {
+                btnRegistrati.setEnabled(true); // Riabilita il tasto
+                btnRegistrati.setText("Accedi"); // Ripristina il testo originale
+            }
+        }.start();
+    }
 
 
 }

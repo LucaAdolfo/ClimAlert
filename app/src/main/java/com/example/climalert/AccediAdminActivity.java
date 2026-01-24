@@ -2,6 +2,7 @@ package com.example.climalert;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,33 +54,56 @@ public class AccediAdminActivity extends AppCompatActivity {
         btnAccedi.setOnClickListener(view -> {
             String email = email_text.getText().toString().trim();
             String password = password_text.getText().toString().trim();
-            //adminLogin(email, password);
-
-            //questo pezzo è da sostituire con il commento prima quando funzionerà login admin
-            Intent intent = new Intent(AccediAdminActivity.this, MainAdminActivity.class);
-            startActivity(intent);
-            finish();
+            if(email.isEmpty() || password.isEmpty()){
+                Toast.makeText(AccediAdminActivity.this, "Compilare tutti i campi", Toast.LENGTH_SHORT).show();
+                startLoginCountdown(3000);
+                return;
+            }
+            else {
+                emailPasswordLogin(email, password);
+            }
         });
     }
 
-    private void adminLogin(String email, String password) {
+    private void emailPasswordLogin(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-
-                            Intent intent = new Intent(AccediAdminActivity.this, MainAdminActivity.class);
-                            startActivity(intent);
-                            finish();
+                            loginSuccesUI();
                         } else {
+                            // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            startLoginCountdown(3000); // Avvia il countdown
                             Toast.makeText(AccediAdminActivity.this, "Credenziali sbagliate",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+    private void loginSuccesUI(){
+        Intent intent = new Intent(AccediAdminActivity.this, MainAdminActivity.class);
+        startActivity(intent);
+        finish();
+    }
+    private void startLoginCountdown(long millisInFuture) {
+        btnAccedi.setEnabled(false); // Disabilita il tasto
+
+        new CountDownTimer(millisInFuture, 1000) { // 1000 ogni quanto il metodo on tick viene chiamato
+
+            public void onTick(long millisUntilFinished) {
+                // Aggiorna il testo del bottone con i secondi rimanenti
+                btnAccedi.setText("Riprova tra: " + millisUntilFinished / 1000 + "s");
+            }
+
+            public void onFinish() {
+                btnAccedi.setEnabled(true); // Riabilita il tasto
+                btnAccedi.setText("Accedi"); // Ripristina il testo originale
+            }
+        }.start();
     }
 }
