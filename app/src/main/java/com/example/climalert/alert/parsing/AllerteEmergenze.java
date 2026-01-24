@@ -41,6 +41,7 @@ public class AllerteEmergenze {
                 .setSmallIcon(R.drawable.notizie)// TODO IMPOSTA
                 .setContentTitle(textTitle)
                 .setContentText(textContent)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(textContent))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);

@@ -59,7 +59,12 @@ public class EmergencyWorker extends Worker {
                 return Result.success(); // Non c'è la regione che cerchiamo
             } else if (isAlertNew(last_fetched_time,entry.getUpdated())) { //Se l'aggiornamento è piu recente di quello ultimo
                 Log.d(TAG, "Nuova allerta disponibile");
-                String allerta =  "Allerta emanata il "+ castData(entry.getUpdated()) + "\nTipo: "+ entry.getEvent()+"\nUrgenza: "+entry.getUrgency();
+                String allerta = String.format(
+                        "Data: %s\nTipo: %s\nUrgenza: %s",
+                        castData(entry.getUpdated()),
+                        entry.getEvent() != null ? entry.getEvent() : "Non specificato",
+                        entry.getUrgency() != null ? entry.getUrgency() : "Ordinaria"
+                );
                 AllerteEmergenze.sendNotification(getApplicationContext(), "Allerta per"+entry.getAreaDesc(),allerta, entry.getId().hashCode());
                 Data dataoutput= new Data.Builder().putString("new_fetched_time", entry.getUpdated()).build();
                 return Result.success(dataoutput); //C'è qualcosa da aggiornare!

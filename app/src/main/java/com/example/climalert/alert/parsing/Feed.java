@@ -18,8 +18,10 @@ public class Feed {
         return entry;
     }
     public Entry getEntry(String name) {
+        if(name==null)
+            name= "Veneto";
         for (Entry entry : entry){
-            if (entry.getAreaDesc().contains(name)){
+            if (entry.getAreaDesc().toLowerCase().contains(name.toLowerCase()) || entry.getAreaDesc().contains(name)){
                 return entry;
             }
         }
