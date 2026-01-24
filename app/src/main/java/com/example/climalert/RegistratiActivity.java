@@ -51,7 +51,7 @@ public class RegistratiActivity extends AppCompatActivity {
     private CheckBox cbxPrivacy;
 
     private FirebaseFirestore database;
-
+    //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
