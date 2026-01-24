@@ -99,7 +99,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginStart="105dp"
+        android:layout_marginStart="87dp"
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/light_theme" >
@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:text=""
             app:buttonTint="@color/white"
-            android:layout_marginStart="120dp"
+            android:layout_marginStart="156dp"
             app:layout_constraintEnd_toEndOf="@id/dark_theme"
             app:layout_constraintStart_toStartOf="@id/dark_theme"
             app:layout_constraintTop_toBottomOf="@id/dark_theme" />
@@ -135,8 +135,8 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:layout_marginTop="30dp"
-        android:textSize="14dp"
-        android:text="Seleziona il tema che preferisci utilizzare nell'applicazione."
+        android:textSize="14sp"
+        android:text="@string/seleziona_il_tema_che_preferisci_utilizzare_nell_applicazione"
         android:textStyle="italic"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
