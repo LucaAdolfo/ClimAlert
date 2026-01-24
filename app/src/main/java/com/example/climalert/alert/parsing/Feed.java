@@ -1,14 +1,17 @@
 package com.example.climalert.alert.parsing;
 
 
+import android.util.Log;
+
 import com.tickaroo.tikxml.annotation.Element;
+import com.tickaroo.tikxml.annotation.PropertyElement;
 import com.tickaroo.tikxml.annotation.Xml;
 
 import java.util.List;
 
 @Xml(name = "feed")
 public class Feed {
-    @Element(name = "updated")
+    @PropertyElement(name = "updated")
     String updated;
 
     public List<Entry> getEntry() {
@@ -20,7 +23,8 @@ public class Feed {
                 return entry;
             }
         }
-        return null;
+        Log.e("EmergencyWorker - FEED", "Nessuna regione trovata con " + name);
+        return getEntry().get(0);
     }
 
     public String getUpdated() {

@@ -1,6 +1,6 @@
 package com.example.climalert.alert.parsing;
 
-import com.tickaroo.tikxml.annotation.Element;
+import com.tickaroo.tikxml.annotation.PropertyElement;
 import com.tickaroo.tikxml.annotation.Xml;
 /*
      <valueName>EMMA_ID</valueName>
@@ -8,7 +8,7 @@ import com.tickaroo.tikxml.annotation.Xml;
 */
 @Xml(name="cap:geocode")
 public class Geocode {
-    @Element(name = "valueName")
+    @PropertyElement(name = "valueName")
     String valueName;
 
     public String getValue() {
@@ -19,7 +19,7 @@ public class Geocode {
         return valueName;
     }
 
-    @Element(name = "value")
+    @PropertyElement(name = "value")
     String value;
 
 }

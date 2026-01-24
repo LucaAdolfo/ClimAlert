@@ -1,21 +1,15 @@
 package com.example.climalert;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static java.security.AccessController.getContext;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -26,19 +20,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
 import java.util.ArrayList;
-import org.osmdroid.views.overlay.Marker;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import java.util.Objects;
 
 public class MappaActivity extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
@@ -101,7 +96,6 @@ public class MappaActivity extends AppCompatActivity {
                         map.getOverlays().add(userMarker);
                         userMarker.setTitle("You");
                         userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                        //userMarker.getIcon();//TODO
 
                         android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(MappaActivity.this, R.drawable.ic_location);
                         if (iconaCustom != null) {
@@ -115,7 +109,7 @@ public class MappaActivity extends AppCompatActivity {
                 }
             }
 
-        }); //TODO Occhio
+        });
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -189,34 +183,35 @@ public class MappaActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(query -> {
                     for (QueryDocumentSnapshot doc : query) { //query ha gli elementi trovati
+                        if(!Objects.equals(doc.getString("stato"), "in attesa")) {
+                            Double lat = doc.getDouble("lat");
+                            Double lon = doc.getDouble("lon");
+                            if (lat == null || lon == null) continue;
 
-                        Double lat = doc.getDouble("lat");
-                        Double lon = doc.getDouble("lon");
-                        if (lat == null || lon == null) continue;
+                            String tipo = doc.getString("tipo");
+                            String descrizione = doc.getString("descrizione");
 
-                        String tipo = doc.getString("tipo");
-                        String descrizione = doc.getString("descrizione");
+                            GeoPoint p = new GeoPoint(lat, lon);
 
-                        GeoPoint p = new GeoPoint(lat, lon);
+                            //Creo un pin sulla mappa
+                            Marker marker = new Marker(map);
+                            marker.setPosition(p);
+                            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
-                        //Creo un pin sulla mappa
-                        Marker marker = new Marker(map);
-                        marker.setPosition(p);
-                        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                            android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
+                            if (iconaCustom != null) {
+                                iconaCustom = iconaCustom.mutate();
 
-                        android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
-                        if (iconaCustom != null) {
-                            iconaCustom = iconaCustom.mutate();
+                                iconaCustom.setColorFilter(android.graphics.Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
 
-                            iconaCustom.setColorFilter(android.graphics.Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
+                                marker.setIcon(iconaCustom);
+                            }
 
-                            marker.setIcon(iconaCustom);
+                            marker.setTitle(tipo != null ? tipo : "Segnalazione");
+                            marker.setSubDescription(descrizione != null ? descrizione : "");
+
+                            map.getOverlays().add(marker);
                         }
-
-                        marker.setTitle(tipo != null ? tipo : "Segnalazione");
-                        marker.setSubDescription(descrizione != null ? descrizione : "");
-
-                        map.getOverlays().add(marker);
                     }
                     map.invalidate();
                 })

@@ -1,6 +1,7 @@
 package com.example.climalert.alert.parsing;
 
 import com.tickaroo.tikxml.annotation.Element;
+import com.tickaroo.tikxml.annotation.PropertyElement;
 import com.tickaroo.tikxml.annotation.Xml;
 
 import java.util.List;
@@ -44,36 +45,36 @@ public class Entry {
     @Element(name = "link")
     List<LinkXML> link;
 
-    @Element(name="geocode")
+    @Element(name="cap:geocode")
     Geocode geocode;
 
-    @Element(name = "areaDesc")
+    @PropertyElement(name = "cap:areaDesc")
     String areaDesc;
 
-    @Element(name = "severity")
+    @PropertyElement(name = "cap:severity")
     String severity;
 
-    @Element(name = "title")
+    @PropertyElement(name = "cap:title")
     String title;
-    @Element(name="event")
+    @PropertyElement(name="cap:event")
     String event;
-    @Element(name="sent")
+    @PropertyElement(name="cap:sent")
     String sent;
-    @Element(name="expires")
+    @PropertyElement(name="cap:expires")
     String expires;
-    @Element(name="effective")
+    @PropertyElement(name="cap:effective")
     String effective;
-    @Element(name="onset")
+    @PropertyElement(name="cap:onset")
     String onset;
-    @Element(name="certainty")
+    @PropertyElement(name="cap:certainty")
     String certainty;
-    @Element(name="urgency")
+    @PropertyElement(name="cap:urgency")
     String urgency;
-    @Element(name="published")
+    @PropertyElement(name="published")
     String published;
-    @Element(name="id")
+    @PropertyElement(name="id")
     String id;
-    @Element(name="updated")
+    @PropertyElement(name="updated")
     String updated;
 
 

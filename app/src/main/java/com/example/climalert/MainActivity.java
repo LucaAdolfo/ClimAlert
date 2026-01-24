@@ -353,15 +353,17 @@ public class MainActivity extends AppCompatActivity {
                 .putString("updated_time", last_fetched_time)
                 .build();
         PeriodicWorkRequest emergencyWorkRequest =
-                new PeriodicWorkRequest.Builder(EmergencyWorker.class, 1, TimeUnit.HOURS)
+                new PeriodicWorkRequest.Builder(EmergencyWorker.class, 30, TimeUnit.MINUTES)
                         .setInputData(data)
                         .setConstraints(new androidx.work.Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                         .build();
+        //OneTimeWorkRequest emergencyWorkRequest = new OneTimeWorkRequest.Builder(EmergencyWorker.class).setInputData(data).setInitialDelay(5, TimeUnit.SECONDS).build();
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "EmergencyAlertWork", // Un nome univoco per questo lavoro
                 ExistingPeriodicWorkPolicy.KEEP, // Se esiste già un lavoro con questo nome, non fare nulla
                 emergencyWorkRequest
         );
+//        WorkManager.getInstance(this).enqueue(emergencyWorkRequest);
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(emergencyWorkRequest.getId())
                 .observe(this, workInfo -> {
                     if (workInfo != null) {

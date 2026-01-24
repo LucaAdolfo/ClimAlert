@@ -10,7 +10,10 @@ import androidx.work.WorkerParameters;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 public class EmergencyWorker extends Worker {
     public String TAG = "EmergencyWorker";
@@ -28,12 +31,18 @@ public class EmergencyWorker extends Worker {
         Log.d(TAG, "Il worker ha iniziato il suo lavoro in background.");
 
         try {
+            if (getRunAttemptCount() > 3) {
+                Log.e(TAG, "Troppi tentativi falliti, interrompo.");
+                return Result.failure();
+            }
             String body = AllerteEmergenze.fetchData();
             if (body == null){
+                Log.e(TAG, "Fetch data non riuscito , retry");
                 return Result.retry();
             }
             Feed feed = AllerteEmergenze.parseFeed(body);
             if(feed==null){
+                Log.e(TAG, "Parsing non riuscito");
                 return Result.retry();
             }
             String last_fetched_time = getInputData().getString("updated_time");
@@ -44,18 +53,21 @@ public class EmergencyWorker extends Worker {
             String targetRegion = getInputData().getString("target_region");
             Entry entry = feed.getEntry(targetRegion);
             if (entry == null){
-                Log.e("EmergencyWorker", "Nessuna regione trovata per EmergencyWorker dal parsing");
+                Log.e(TAG, "Nessuna regione trovata per EmergencyWorker dal parsing");
                 return Result.success(); // Non c'è la regione che cerchiamo
-            } else if (!isAlertNew(last_fetched_time,entry.getUpdated())) { //Se l'aggiornamento è piu recente di quello ultimo
-                AllerteEmergenze.sendNotification(getApplicationContext(), "Allerta per"+entry.getAreaDesc(),entry.getEvent(), entry.getId().hashCode());
+            } else if (isAlertNew(last_fetched_time,entry.getUpdated())) { //Se l'aggiornamento è piu recente di quello ultimo
+                Log.d(TAG, "Nuova allerta disponibile");
+                String allerta =  "Allerta emanata il "+ castData(entry.getUpdated()) + "\nTipo: "+ entry.getEvent()+"\nUrgenza: "+entry.getUrgency();
+                AllerteEmergenze.sendNotification(getApplicationContext(), "Allerta per"+entry.getAreaDesc(),allerta, entry.getId().hashCode());
                 Data dataoutput= new Data.Builder().putString("new_fetched_time", entry.getUpdated()).build();
                 return Result.success(dataoutput); //C'è qualcosa da aggiornare!
-
             }else{//Non ha trovato nulla da aggiornare!
+                Log.d(TAG, "Non ci sono nuovi aggiornamenti");
                 return Result.success();
             }
 
         } catch (IOException e) {
+            Log.e(TAG, "Errore: "+ e.getMessage());
             return Result.retry();
         }
     }
@@ -71,6 +83,17 @@ public class EmergencyWorker extends Worker {
             Log.e("DATE_PARSING", "Errore nel parsing della data: " + last_fetched_time, e);
             return !last_fetched_time.equals(lastTime); // Se fallisce lascio che confronto le stringhe
         }
+    }
+    private String castData(String data){
+        try {
+            OffsetDateTime odt = OffsetDateTime.parse(data);
+            OffsetDateTime dataLocale = odt.atZoneSameInstant(ZoneId.systemDefault()).toOffsetDateTime();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM, HH:mm", Locale.ITALIAN);
+            return dataLocale.format(formatter);
+        } catch (Exception e) {
+            return data; // In caso di errore ritorna l'originale
+        }
+
     }
 
 }
