@@ -23,6 +23,7 @@
         android:paddingStart="170dp"
         android:paddingEnd="70dp"
         android:text="@string/meteo"
+        android:textColor="@color/black"
         android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/headerGuideline"
@@ -115,6 +116,7 @@
 
         <!--PREVISIONI-->
         <TextView
+            android:id="@+id/txtPrevisioni"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -124,6 +126,7 @@
             android:textColor="@android:color/black" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardPrevisioni"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -83,6 +84,14 @@ public class SegnalazioneActivity extends AppCompatActivity {
         selectedMarker = new Marker(mapSelection);
         selectedMarker.setPosition(currentSelection);
         selectedMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+        android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
+        if (iconaCustom != null) {
+            iconaCustom = iconaCustom.mutate();
+            iconaCustom.setColorFilter(android.graphics.Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+            selectedMarker.setIcon(iconaCustom);
+        }
+
         selectedMarker.setTitle("Trascina o clicca per spostare");
         mapSelection.getOverlays().add(selectedMarker);
 

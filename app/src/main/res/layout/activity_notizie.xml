@@ -21,6 +21,7 @@
         android:background="@drawable/rounded_bottom_header"
         android:gravity="center_vertical|center"
         android:text="@string/notizie_ufficiali"
+        android:textColor="@color/black"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/headerGuideline"

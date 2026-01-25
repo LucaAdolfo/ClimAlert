@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,6 +22,8 @@ import com.example.climalert.meteo.MeteoCallback;
 import com.example.climalert.meteo.parsing.ArpavMeteo;
 import com.example.climalert.meteo.parsing.Previsione;
 import com.example.climalert.meteo.parsing.Previsioni;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,6 +49,23 @@ public class MeteoActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        ImageView imgPosizione = findViewById(R.id.imgPosizione);
+        TextView txtPrevisioni = findViewById(R.id.txtPrevisioni);
+        CardView cardView = findViewById(R.id.cardPrevisioni);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("ImpostazioniTema", MODE_PRIVATE);
+        boolean isDarkMode = sharedPreferences.getBoolean("isDarkMode", false);
+
+        if (isDarkMode) {
+            imgPosizione.setColorFilter(getResources().getColor(R.color.white));
+            txtPrevisioni.setTextColor(getResources().getColor(R.color.white));
+            cardView.setCardBackgroundColor(android.graphics.Color.parseColor("#333333"));
+        } else {
+            imgPosizione.setColorFilter(getResources().getColor(R.color.black));
+            txtPrevisioni.setTextColor(getResources().getColor(R.color.black));
+            cardView.setCardBackgroundColor(getResources().getColor(R.color.light_gray));
+        }
 
         fusedLocationClient = com.google.android.gms.location.LocationServices.getFusedLocationProviderClient(this);
         

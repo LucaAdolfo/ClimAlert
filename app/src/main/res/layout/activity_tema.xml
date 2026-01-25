@@ -21,6 +21,7 @@
         android:background="@drawable/rounded_bottom_header"
         android:gravity="center"
         android:text="@string/tema"
+        android:textColor="@color/black"
         android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/headerGuideline"

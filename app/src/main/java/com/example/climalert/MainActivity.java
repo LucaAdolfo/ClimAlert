@@ -324,6 +324,13 @@ public class MainActivity extends AppCompatActivity {
         //navigazione orizzontale
         navBar = findViewById(R.id.navBar);
 
+
+        if (isDarkMode) {
+            navBar.setBackground(getResources().getDrawable(R.drawable.rounded_top_nav_dark));
+        } else {
+            navBar.setBackground(getResources().getDrawable(R.drawable.rounded_top_nav));
+        }
+
         //cambia activity
         navBar.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();

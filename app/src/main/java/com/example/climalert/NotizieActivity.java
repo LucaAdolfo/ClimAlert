@@ -1,6 +1,7 @@
 package com.example.climalert;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -31,6 +32,15 @@ public class NotizieActivity extends AppCompatActivity {
 
         //navigazione orizzontale
         navBar = findViewById(R.id.navBar);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("ImpostazioniTema", MODE_PRIVATE);
+        boolean isDarkMode = sharedPreferences.getBoolean("isDarkMode", false);
+
+        if (isDarkMode) {
+            navBar.setBackground(getResources().getDrawable(R.drawable.rounded_top_nav_dark));
+        } else {
+            navBar.setBackground(getResources().getDrawable(R.drawable.rounded_top_nav));
+        }
 
         //cambia selezione della navigation bar
         navBar.setSelectedItemId(R.id.navigation_notizie);
