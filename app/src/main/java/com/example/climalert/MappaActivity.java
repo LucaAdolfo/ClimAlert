@@ -207,12 +207,36 @@ public class MappaActivity extends AppCompatActivity {
                             marker.setPosition(p);
                             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
+                            // --- Inizio modifica ---
+                            // Imposta un'icona e un colore diverso in base al tipo di segnalazione.
+                            // Per usare icone personalizzate (es. ic_temporale.png), aggiungile
+                            // alla cartella 'res/drawable' e usa 'R.drawable.ic_temporale'.
                             android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
                             if (iconaCustom != null) {
                                 iconaCustom = iconaCustom.mutate();
-                                iconaCustom.setColorFilter(android.graphics.Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
+                                int color;
+                                if (tipo != null) {
+                                    switch (tipo) {
+                                        case "Temporale":
+                                            color = android.graphics.Color.BLUE; // Esempio: Blu per temporale
+                                            break;
+                                        case "Grandine":
+                                            color = android.graphics.Color.CYAN; // Esempio: Ciano per grandine
+                                            break;
+                                        case "Vento":
+                                            color = android.graphics.Color.GRAY; // Esempio: Grigio per vento
+                                            break;
+                                        default:
+                                            color = android.graphics.Color.GREEN; // Colore di default per "Altro" o non specificato
+                                            break;
+                                    }
+                                } else {
+                                    color = android.graphics.Color.GREEN; // Colore di default
+                                }
+                                iconaCustom.setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN);
                                 marker.setIcon(iconaCustom);
                             }
+                            // --- Fine modifica ---
 
                             marker.setTitle(tipo != null ? tipo : "Segnalazione");
                             marker.setSubDescription(descrizione != null ? descrizione : "");
