@@ -1,6 +1,7 @@
 package com.example.climalert;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -47,7 +48,12 @@ public class MeteoActivity extends AppCompatActivity {
         });
 
         fusedLocationClient = com.google.android.gms.location.LocationServices.getFusedLocationProviderClient(this);
-        recuperaPosizioneGPS();
+        
+        txtPosizione = findViewById(R.id.txtPosizione);
+        txtGradi = findViewById(R.id.txtGradi);
+        imgMeteo = findViewById(R.id.imgMeteo);
+
+        gestisciPosizioneEMeteo();
 
         btnIndietro = findViewById(R.id.btnIndietro);
 
@@ -56,10 +62,22 @@ public class MeteoActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
 
-        txtPosizione = findViewById(R.id.txtPosizione);
-        txtGradi = findViewById(R.id.txtGradi);
-        imgMeteo = findViewById(R.id.imgMeteo);
+    private void gestisciPosizioneEMeteo() {
+        SharedPreferences prefs = getSharedPreferences("ClimAlertPrefs", MODE_PRIVATE);
+        boolean useGps = prefs.getBoolean("useGps", true);
+
+        if (useGps) {
+            recuperaPosizioneGPS();
+        } else {
+            int zoneIndex = prefs.getInt("selectedZone", 0);
+            String[] opzioni = {"Belluno e Prealpi orientali", "Treviso e pianura orientale", "Venezia e laguna", "Vicenza e pedemontana", "Padova e pianura centrale", "Rovigo e pianura meridionale", "Verona e pedemontana"};
+            String zonaScelta = opzioni[zoneIndex];
+
+            txtPosizione.setText(zonaScelta);
+            caricaDatiMeteoReali(zonaScelta);
+        }
     }
 
     private String getDataPrevisioneCustom(int giorniDaAggiungere) {
@@ -241,7 +259,7 @@ public class MeteoActivity extends AppCompatActivity {
                 //trova città
                 String citta = addresses.get(0).getLocality();
 
-                // se è null, prendi nome dell'area urbana
+                // se è null, prende nome dell'area urbana
                 if (citta == null) {
                     citta = addresses.get(0).getSubAdminArea();
                 }

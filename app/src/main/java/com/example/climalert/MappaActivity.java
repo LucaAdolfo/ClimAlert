@@ -5,6 +5,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -41,6 +42,16 @@ public class MappaActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private ImageButton btnIndietro;
 
+    private final double[][] coordinateZone = {
+            {46.1425, 12.2167}, //belluno
+            {45.6669, 12.2431}, //treviso
+            {45.4408, 12.3155}, //venezia
+            {45.5479, 11.5446}, //vicenza
+            {45.4064, 11.8768}, //padova
+            {45.0711, 11.7907}, //rovigo
+            {45.4384, 10.9916}  //verona
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +75,39 @@ public class MappaActivity extends AppCompatActivity {
         map.getController().setZoom(9.5);
         map.setMultiTouchControls(true);
         caricaSegnalazioni();
+        
         String[] permissions = new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
         requestPermissionsIfNecessary(permissions);
 
+        gestisciPosizioneMappa();
 
-        myLocation = new GpsMyLocationProvider(ctx);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+
+    private void gestisciPosizioneMappa() {
+        SharedPreferences prefs = getSharedPreferences("ClimAlertPrefs", MODE_PRIVATE);
+        boolean useGps = prefs.getBoolean("useGps", true);
+
+        if (useGps) {
+            avviaLocalizzazioneGps();
+        } else {
+            int zoneIndex = prefs.getInt("selectedZone", 0);
+            GeoPoint point = new GeoPoint(coordinateZone[zoneIndex][0], coordinateZone[zoneIndex][1]);
+            map.getController().setZoom(12.0);
+            map.getController().animateTo(point);
+            aggiungiPinUtente(point, "La tua zona");
+        }
+    }
+
+    private void avviaLocalizzazioneGps() {
+        myLocation = new GpsMyLocationProvider(this);
         myLocation.startLocationProvider(new IMyLocationConsumer() {
             @Override
             public void onLocationChanged(Location location, IMyLocationProvider source) {
@@ -79,37 +115,32 @@ public class MappaActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
 
-                        // Centra la mappa sulla posizione dell'utente
+                        //mappa centratat sulla posizione
                         map.getController().animateTo(userLocation);
 
-                        // Dopo aver trovato la posizione, possiamo smettere di ascoltare per risparmiare batteria
+                        //smetto di ascoltare per risparmiare batteria
                         myLocation.stopLocationProvider();
-
-                        Marker userMarker = new Marker(map);
-                        userMarker.setPosition(userLocation);
-                        map.getOverlays().add(userMarker);
-                        userMarker.setTitle("Tu sei qui");
-                        userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-
-                        // Imposta un'icona personalizzata per la posizione dell'utente (rossa)
-                        Drawable userIcon = ContextCompat.getDrawable(MappaActivity.this, R.drawable.ic_location);
-                        if (userIcon != null) {
-                            userIcon = userIcon.mutate();
-                            userIcon.setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
-                            userMarker.setIcon(userIcon);
-                        }
+                        aggiungiPinUtente(userLocation, "Tu");
                     });
                 }
             }
-
         });
+    }
 
+    private void aggiungiPinUtente(GeoPoint point, String titolo) {
+        Marker userMarker = new Marker(map);
+        userMarker.setPosition(point);
+        userMarker.setTitle(titolo);
+        userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
+        if (iconaCustom != null) {
+            iconaCustom = iconaCustom.mutate();
+            iconaCustom.setColorFilter(android.graphics.Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+            userMarker.setIcon(iconaCustom);
+        }
+        map.getOverlays().add(userMarker);
+        map.invalidate();
     }
 
     // Funzione per ottenere un colore diverso in base al tipo di segnalazione
@@ -128,6 +159,33 @@ public class MappaActivity extends AppCompatActivity {
                 return Color.YELLOW;
             default:
                 return Color.GREEN; // Colore per altre segnalazioni
+    
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
+                Log.d("MappaActivity", "Permesso concesso dall'utente.");
+            } else {
+                Log.w("MappaActivity", "Permesso negato dall'utente.");
+            }
+        }
+    }
+
+    private void requestPermissionsIfNecessary(String[] permissions) {
+        ArrayList<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission)
+                    != PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission);
+            }
+        }
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissionsToRequest.toArray(new String[0]),
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
 
@@ -137,8 +195,7 @@ public class MappaActivity extends AppCompatActivity {
                 .whereEqualTo("stato", "accettata")
                 .get()
                 .addOnSuccessListener(query -> {
-                    for (QueryDocumentSnapshot doc : query) { //query ha gli elementi trovati
-
+                    for (QueryDocumentSnapshot doc : query) {
                             Double lat = doc.getDouble("lat");
                             Double lon = doc.getDouble("lon");
                             if (lat == null || lon == null) continue;
@@ -148,7 +205,6 @@ public class MappaActivity extends AppCompatActivity {
 
                             GeoPoint p = new GeoPoint(lat, lon);
 
-                            //Creo un pin sulla mappa
                             Marker marker = new Marker(map);
                             marker.setPosition(p);
                             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -156,9 +212,7 @@ public class MappaActivity extends AppCompatActivity {
                             android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
                             if (iconaCustom != null) {
                                 iconaCustom = iconaCustom.mutate();
-
                                 iconaCustom.setColorFilter(android.graphics.Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
-
                                 marker.setIcon(iconaCustom);
                             }
 
@@ -184,25 +238,5 @@ public class MappaActivity extends AppCompatActivity {
         map.onPause();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-            if (grantResults.length == 0 || grantResults[0] != PERMISSION_GRANTED) {
-                Log.w("MappaActivity", "Permesso di scrittura negato. La mappa potrebbe non funzionare offline.");
-            }
-        }
-    }
 
-    private void requestPermissionsIfNecessary(String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED) {
-                permissionsToRequest.add(permission);
-            }
-        }
-        if (!permissionsToRequest.isEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[0]), REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }
 }
