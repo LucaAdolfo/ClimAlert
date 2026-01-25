@@ -166,5 +166,7 @@
     <string name="arpav_meteo">ARPAV Meteo</string>
     <string name="https_www_venetoambientenews_it_category_protezione_civile_le_innovazioni_pimot"><u>https://www.venetoambientenews.it/</u></string>
     <string name="seleziona_il_tema_che_preferisci_utilizzare_nell_applicazione">Seleziona il tema che preferisci utilizzare nell\'applicazione.</string>
+    <string name="usa_gps">Usa la mia posizione (GPS)</string>
+    <string name="usa_manuale">Scegli zona manualmente</string>
 
 </resources>

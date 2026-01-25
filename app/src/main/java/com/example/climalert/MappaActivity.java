@@ -5,6 +5,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -42,6 +43,16 @@ public class MappaActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private ImageButton btnIndietro;
 
+    private final double[][] coordinateZone = {
+            {46.1425, 12.2167}, //belluno
+            {45.6669, 12.2431}, //treviso
+            {45.4408, 12.3155}, //venezia
+            {45.5479, 11.5446}, //vicenza
+            {45.4064, 11.8768}, //padova
+            {45.0711, 11.7907}, //rovigo
+            {45.4384, 10.9916}  //verona
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,50 +77,14 @@ public class MappaActivity extends AppCompatActivity {
         map.getController().setZoom(9.5);
         map.setMultiTouchControls(true);
         caricaSegnalazioni();
+        
         String[] permissions = new String[]{
-                // if you need to show the current location, uncomment the line below
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                // WRITE_EXTERNAL_STORAGE is required in order to show the map
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
         requestPermissionsIfNecessary(permissions);
 
-
-        myLocation = new GpsMyLocationProvider(ctx);
-        myLocation.startLocationProvider(new IMyLocationConsumer() {
-            @Override
-            public void onLocationChanged(Location location, IMyLocationProvider source) {
-                if (location != null) {
-                    runOnUiThread(() -> {
-                        GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
-
-                        // Centra la mappa sulla posizione dell'utente
-                        map.getController().animateTo(userLocation);
-
-                        // Dopo aver trovato la posizione, possiamo smettere di ascoltare per risparmiare batteria
-                        myLocation.stopLocationProvider();
-
-
-                        Marker userMarker = new Marker(map);
-                        userMarker.setPosition(userLocation);
-                        map.getOverlays().add(userMarker);
-                        userMarker.setTitle("You");
-                        userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-
-                        android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(MappaActivity.this, R.drawable.ic_location);
-                        if (iconaCustom != null) {
-                            iconaCustom = iconaCustom.mutate();
-
-                            iconaCustom.setColorFilter(android.graphics.Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
-
-                            userMarker.setIcon(iconaCustom);
-                        }
-                    });
-                }
-            }
-
-        });
-
+        gestisciPosizioneMappa();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -118,41 +93,80 @@ public class MappaActivity extends AppCompatActivity {
         });
     }
 
+    private void gestisciPosizioneMappa() {
+        SharedPreferences prefs = getSharedPreferences("ClimAlertPrefs", MODE_PRIVATE);
+        boolean useGps = prefs.getBoolean("useGps", true);
+
+        if (useGps) {
+            avviaLocalizzazioneGps();
+        } else {
+            int zoneIndex = prefs.getInt("selectedZone", 0);
+            GeoPoint point = new GeoPoint(coordinateZone[zoneIndex][0], coordinateZone[zoneIndex][1]);
+            map.getController().setZoom(12.0);
+            map.getController().animateTo(point);
+            aggiungiPinUtente(point, "La tua zona");
+        }
+    }
+
+    private void avviaLocalizzazioneGps() {
+        myLocation = new GpsMyLocationProvider(this);
+        myLocation.startLocationProvider(new IMyLocationConsumer() {
+            @Override
+            public void onLocationChanged(Location location, IMyLocationProvider source) {
+                if (location != null) {
+                    runOnUiThread(() -> {
+                        GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+
+                        //mappa centratat sulla posizione
+                        map.getController().animateTo(userLocation);
+
+                        //smetto di ascoltare per risparmiare batteria
+                        myLocation.stopLocationProvider();
+
+                        aggiungiPinUtente(userLocation, "Tu");
+                    });
+                }
+            }
+        });
+    }
+
+    private void aggiungiPinUtente(GeoPoint point, String titolo) {
+        Marker userMarker = new Marker(map);
+        userMarker.setPosition(point);
+        userMarker.setTitle(titolo);
+        userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+        android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
+        if (iconaCustom != null) {
+            iconaCustom = iconaCustom.mutate();
+            iconaCustom.setColorFilter(android.graphics.Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+            userMarker.setIcon(iconaCustom);
+        }
+        map.getOverlays().add(userMarker);
+        map.invalidate();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+        map.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().save(this, prefs);
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+        map.onPause();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults); // Non dimenticare questa chiamata
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
-                // Il primo (e in questo caso unico) permesso è stato concesso.
                 Log.d("MappaActivity", "Permesso concesso dall'utente.");
-                // La mappa dovrebbe funzionare correttamente.
             } else {
-                // Il permesso è stato negato.
                 Log.w("MappaActivity", "Permesso negato dall'utente.");
-                // Mostra un messaggio per informare l'utente.
-                Log.w("MappaActivity", "Permesso di scrittura negato. La mappa potrebbe non funzionare offline.");
             }
         }
     }
@@ -162,7 +176,6 @@ public class MappaActivity extends AppCompatActivity {
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission)
                     != PERMISSION_GRANTED) {
-                // Permission is not granted
                 permissionsToRequest.add(permission);
             }
         }
@@ -175,15 +188,12 @@ public class MappaActivity extends AppCompatActivity {
     }
 
     private void caricaSegnalazioni() {
-        //Prendo la collezione di segnalazioni (impostato limite 50 evitare rallentamnenti)
-        //TODO vedere se metterne di più
         db.collection("segnalazioni")
                 .limit(50)
                 .whereEqualTo("stato", "accettata")
                 .get()
                 .addOnSuccessListener(query -> {
-                    for (QueryDocumentSnapshot doc : query) { //query ha gli elementi trovati
-
+                    for (QueryDocumentSnapshot doc : query) {
                             Double lat = doc.getDouble("lat");
                             Double lon = doc.getDouble("lon");
                             if (lat == null || lon == null) continue;
@@ -193,7 +203,6 @@ public class MappaActivity extends AppCompatActivity {
 
                             GeoPoint p = new GeoPoint(lat, lon);
 
-                            //Creo un pin sulla mappa
                             Marker marker = new Marker(map);
                             marker.setPosition(p);
                             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -201,9 +210,7 @@ public class MappaActivity extends AppCompatActivity {
                             android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(this, R.drawable.ic_location);
                             if (iconaCustom != null) {
                                 iconaCustom = iconaCustom.mutate();
-
                                 iconaCustom.setColorFilter(android.graphics.Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
-
                                 marker.setIcon(iconaCustom);
                             }
 
@@ -216,10 +223,4 @@ public class MappaActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> Log.e("MAPPA", "Errore caricamento segnalazioni: " + e.getMessage()));
     }
-
-
-
-
 }
-
-

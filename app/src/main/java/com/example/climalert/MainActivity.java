@@ -59,7 +59,6 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-    //Prova per vedere se tutto ok!
     private TextView txtGradi, txtPosizione, lblAlert;
     private BottomNavigationView navBar;
     private ImageButton btnImpostazioni;
@@ -76,6 +75,42 @@ public class MainActivity extends AppCompatActivity {
     private static String TAG = "MainActivity";
     private CardView alertContainer;
 
+    private final double[][] coordinateZone = {
+            {46.1425, 12.2167}, //belluno
+            {45.6669, 12.2431}, //treviso
+            {45.4408, 12.3155}, //venezia
+            {45.5479, 11.5446}, //vicenza
+            {45.4064, 11.8768}, //padova
+            {45.0711, 11.7907}, //rovigo
+            {45.4384, 10.9916}  //verona
+    };
+
+
+    //gestisco la posizione in base alle preferenze
+    private void gestisciPosizioneEMeteo() {
+        SharedPreferences prefs = getSharedPreferences("ClimAlertPrefs", MODE_PRIVATE);
+        boolean useGps = prefs.getBoolean("useGps", true);
+
+        if (useGps) {
+            recuperaPosizioneGPS();
+        } else {
+            int zoneIndex = prefs.getInt("selectedZone", 0);
+            String[] opzioni = {"Belluno e Prealpi orientali", "Treviso e pianura orientale", "Venezia e laguna", "Vicenza e pedemontana", "Padova e pianura centrale", "Rovigo e pianura meridionale", "Verona e pedemontana"};
+            String zonaScelta = opzioni[zoneIndex];
+
+            txtPosizione.setText(zonaScelta);
+            caricaDatiMeteoReali(zonaScelta);
+            this.regione = "Veneto";
+            setWorkerEmergenze();
+
+
+            MapView mapPreview = findViewById(R.id.mapPreview);
+            if (mapPreview != null) {
+                GeoPoint zonePoint = new GeoPoint(coordinateZone[zoneIndex][0], coordinateZone[zoneIndex][1]);
+                mapPreview.getController().setCenter(zonePoint);
+            }
+        }
+    }
 
 
     //legge gps
@@ -102,14 +137,14 @@ public class MainActivity extends AppCompatActivity {
     private void ottieniNomeCitta(double lat, double lon) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
-            // trova l'indirizzo per le coordinate fornite
+            //trova l'indirizzo per le coordinate fornite
             List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
 
             if (addresses != null && !addresses.isEmpty()) {
                 //trova città
                 String citta = addresses.get(0).getLocality();
 
-                // se è null, prendi nome dell'area urbana
+                //se è null, prende nome dell'area urbana
                 if (citta == null) {
                     citta = addresses.get(0).getSubAdminArea();
                 }
@@ -129,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
     private String ottieniNomeRegione(double lat, double lon) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
-            // trova l'indirizzo per le coordinate fornite
+            //trova l'indirizzo per le coordinate fornite
             List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
 
             if (addresses != null && !addresses.isEmpty()) {
@@ -234,11 +269,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        //Scrivi da qui in poi
 
         fusedLocationClient = com.google.android.gms.location.LocationServices.getFusedLocationProviderClient(this);
-        recuperaPosizioneGPS();
-        //CHiedo permesso per notifiche!
+        
+
+        txtPosizione = findViewById(R.id.txtPosizione);
+        txtGradi = findViewById(R.id.previsioniPosizione);
+        imgMeteo = findViewById(R.id.meteoOggi);
+        gestisciPosizioneEMeteo();
+
+        //CHiedo permesso per notifiche
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -323,10 +363,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        txtPosizione = findViewById(R.id.txtPosizione);
-        txtGradi = findViewById(R.id.previsioniPosizione);
-        imgMeteo = findViewById(R.id.meteoOggi);
-
 
         /*Codice per bordi schermo di defualt lascia cosi*/
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -380,7 +416,7 @@ public class MainActivity extends AppCompatActivity {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM, HH:mm", Locale.ITALIAN);
             return dataLocale.format(formatter);
         } catch (Exception e) {
-            return data; // In caso di errore ritorna l'originale
+            return data; //in caso di errore ritorna l'originale
         }
 
     }
@@ -398,25 +434,22 @@ public class MainActivity extends AppCompatActivity {
                         .setInputData(data)
                         .setConstraints(new androidx.work.Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                         .build();
-        //OneTimeWorkRequest emergencyWorkRequest = new OneTimeWorkRequest.Builder(EmergencyWorker.class).setInputData(data).setInitialDelay(5, TimeUnit.SECONDS).build();
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                "EmergencyAlertWork", // Un nome univoco per questo lavoro
-                ExistingPeriodicWorkPolicy.KEEP, // Se esiste già un lavoro con questo nome, non fare nulla
+                "EmergencyAlertWork",
+                ExistingPeriodicWorkPolicy.KEEP,
                 emergencyWorkRequest
         );
-//        WorkManager.getInstance(this).enqueue(emergencyWorkRequest);
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(emergencyWorkRequest.getId())
                 .observe(this, workInfo -> {
                     if (workInfo != null) {
                         Log.d("MainActivity", "Stato del worker cambiato: " + workInfo.getState());
                     }
-                    // Controlla se il worker ha terminato con SUCCESSO
+
                     if (workInfo != null && workInfo.getState() == androidx.work.WorkInfo.State.SUCCEEDED) {
-                        // Recupera i dati di output usando la chiave definita nel Worker
                         String newUpdateTime = workInfo.getOutputData().getString("new_fetched_time");
                         if (newUpdateTime != null) {
                             Log.d("MainActivity", "Worker ha finito! Salvo il nuovo tempo di aggiornamento: " + newUpdateTime);
-                            setTimeUpdate(newUpdateTime); // Usa il tuo metodo esistente
+                            setTimeUpdate(newUpdateTime);
                         }
                     }
                 });
@@ -428,11 +461,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // L'utente ha appena cliccato "Consenti"!
-                // Ora possiamo chiamare di nuovo il GPS con successo
+                //utente ha cliccato consenti
                 recuperaPosizioneGPS();
             } else {
-                // L'utente ha negato
+                //L'utente ha negato
                 txtPosizione.setText("Permesso negato");
             }
         }
@@ -477,6 +509,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        gestisciPosizioneEMeteo();
         if (findViewById(R.id.mapPreview)!=null){
             ((MapView) findViewById(R.id.mapPreview)).onResume();
         }
