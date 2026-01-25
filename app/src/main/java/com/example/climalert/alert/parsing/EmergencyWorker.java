@@ -63,13 +63,14 @@ public class EmergencyWorker extends Worker {
             } else if (isAlertNew(last_fetched_time,entry.getUpdated())) { //Se l'aggiornamento è piu recente di quello ultimo
                 Log.d(TAG, "Nuova allerta disponibile");
                 String allerta = String.format(
-                        "Data: %s\nTipo: %s\nUrgenza: %s",
+                        "Data: %s\nTipo: %s\nUrgenza: %s\nPrevista Per: %s",
                         castData(entry.getUpdated()),
                         entry.getEvent() != null ? entry.getEvent() : "Non specificato",
-                        entry.getUrgency() != null ? entry.getUrgency() : "Ordinaria"
+                        entry.getUrgency() != null ? entry.getUrgency() : "Ordinaria",
+                        castData(entry.getOnset())
                 );
                 setEntryUpdate(entry);
-                AllerteEmergenze.sendNotification(getApplicationContext(), "Allerta per"+entry.getAreaDesc(),allerta, entry.getId().hashCode());
+                AllerteEmergenze.sendNotification(getApplicationContext(), "Allerta per "+entry.getAreaDesc(),allerta, entry.getId().hashCode());
                 Data dataoutput= new Data.Builder().putString("new_fetched_time", entry.getUpdated()).build();
                 return Result.success(dataoutput); //C'è qualcosa da aggiornare!
             }else{//Non ha trovato nulla da aggiornare!
@@ -108,13 +109,10 @@ public class EmergencyWorker extends Worker {
     }
     private void setEntryUpdate(Entry entry) {
         Gson gson = new Gson();
+        String json = gson.toJson(entry);
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("EmergencyAlert", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        String json = gson.toJson(entry);
-        editor.putString("ultima_entry", json);
-        sharedPreferences.edit().putString("ultima_entry", json).apply();
-        editor.apply();
-
+        editor.putString("ultima_entry", json).apply();
     }
 
 }
