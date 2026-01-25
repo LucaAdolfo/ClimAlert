@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ImageButton;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -56,6 +57,7 @@ public class MappaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mappa);
         db = FirebaseFirestore.getInstance();
 
@@ -120,6 +122,7 @@ public class MappaActivity extends AppCompatActivity {
 
                         //smetto di ascoltare per risparmiare batteria
                         myLocation.stopLocationProvider();
+
                         aggiungiPinUtente(userLocation, "Tu");
                     });
                 }
@@ -143,23 +146,18 @@ public class MappaActivity extends AppCompatActivity {
         map.invalidate();
     }
 
-    // Funzione per ottenere un colore diverso in base al tipo di segnalazione
-    private int getColorForTipo(String tipo) {
-        if (tipo == null) {
-            return Color.GRAY; // Colore di default per tipo non specificato
-        }
-        switch (tipo.toLowerCase()) {
-            case "incendio":
-                return Color.RED;
-            case "allagamento":
-                return Color.BLUE;
-            case "frana":
-                return Color.rgb(139, 69, 19); // Marrone
-            case "incidente stradale":
-                return Color.YELLOW;
-            default:
-                return Color.GREEN; // Colore per altre segnalazioni
-    
+    @Override
+    public void onResume() {
+        super.onResume();
+        map.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        map.onPause();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -225,18 +223,4 @@ public class MappaActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> Log.e("MAPPA", "Errore caricamento segnalazioni: " + e.getMessage()));
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        map.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        map.onPause();
-    }
-
-
 }
