@@ -199,7 +199,7 @@ public class MappaActivity extends AppCompatActivity {
                             if (lat == null || lon == null) continue;
 
                             String tipo = doc.getString("tipo");
-                            String descrizione = doc.getString("descrizione")+"<br>Username:"+doc.getString("username");
+                            String descrizione = doc.getString("descrizione")+"<br><b>Username: </b>"+doc.getString("username");
                             com.google.firebase.Timestamp timestamp = doc.getTimestamp("timestamp");
 
                             String dataFormattata = "";
@@ -247,7 +247,7 @@ public class MappaActivity extends AppCompatActivity {
                             // --- Fine modifica ---
 
                             marker.setTitle(tipo != null ? "Evento: " + tipo : "Segnalazione");
-                            marker.setSubDescription(descrizione != null ? descrizione + "<br>Effettuata il: " + dataFormattata : "<br>Effettuata il: " + dataFormattata);
+                            marker.setSubDescription(descrizione != null ? "<b>Descrizione: </b>" + descrizione + "<br><b>Effettuata il:</b> " + dataFormattata : "<br><b>Effettuata il:</b> " + dataFormattata);
 
                             map.getOverlays().add(marker);
                         }
