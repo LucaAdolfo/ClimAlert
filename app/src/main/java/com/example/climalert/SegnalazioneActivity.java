@@ -122,29 +122,38 @@ public class SegnalazioneActivity extends AppCompatActivity {
                 segnalazioneData.put("utente", user.getUid());
                 segnalazioneData.put("email", user.getEmail());
                 segnalazioneData.put("stato", "in attesa");
+                // COORDINATE REALI
+                segnalazioneData.put("lat", currentSelection.getLatitude());
+                segnalazioneData.put("lon", currentSelection.getLongitude());
+                segnalazioneData.put("timestamp", com.google.firebase.Timestamp.now());
                 DocumentReference docRef = database.collection("users").document(user.getUid());
                 docRef.get().addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String username = documentSnapshot.getString("username");
                         segnalazioneData.put("username", username);
+                        database.collection("segnalazioni").add(segnalazioneData)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d(TAG, "Segnalazione riuscita");
+                                    segnalationSuccessUI();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(this, "Errore invio", Toast.LENGTH_SHORT).show();
+                                });
+                    }else{
+                        Toast.makeText(this, "Errore invio", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Errore caricamento dati utente ,utente senza documents");
+                        segnalationSuccessUI();
                     }
+                }).addOnFailureListener(v->{
+                    Toast.makeText(this, "Errore invio", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Errore caricamento dati utente: " + v.getMessage());
+                    segnalationSuccessUI();
                 });
 
 
-                // COORDINATE REALI
-                segnalazioneData.put("lat", currentSelection.getLatitude());
-                segnalazioneData.put("lon", currentSelection.getLongitude());
 
-                segnalazioneData.put("timestamp", com.google.firebase.Timestamp.now());
 
-                database.collection("segnalazioni").add(segnalazioneData)
-                        .addOnSuccessListener(aVoid -> {
-                            Log.d(TAG, "Segnalazione riuscita");
-                            segnalationSuccessUI();
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(this, "Errore invio", Toast.LENGTH_SHORT).show();
-                        });
+
             }
         });
         btnIndietro.setOnClickListener(view -> {
