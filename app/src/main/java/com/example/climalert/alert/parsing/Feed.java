@@ -26,7 +26,7 @@ public class Feed {
             }
         }
         Log.e("EmergencyWorker - FEED", "Nessuna regione trovata con " + name);
-        return getEntry().get(0);
+        return null;
     }
 
     public String getUpdated() {

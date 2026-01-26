@@ -19,17 +19,15 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.events.MapEventsReceiver;
-import android.preference.PreferenceManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SegnalazioneActivity extends AppCompatActivity {
 
@@ -124,6 +122,14 @@ public class SegnalazioneActivity extends AppCompatActivity {
                 segnalazioneData.put("utente", user.getUid());
                 segnalazioneData.put("email", user.getEmail());
                 segnalazioneData.put("stato", "in attesa");
+                DocumentReference docRef = database.collection("users").document(user.getUid());
+                docRef.get().addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String username = documentSnapshot.getString("username");
+                        segnalazioneData.put("username", username);
+                    }
+                });
+
 
                 // COORDINATE REALI
                 segnalazioneData.put("lat", currentSelection.getLatitude());

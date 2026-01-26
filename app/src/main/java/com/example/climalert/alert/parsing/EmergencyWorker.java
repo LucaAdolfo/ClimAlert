@@ -1,7 +1,10 @@
 package com.example.climalert.alert.parsing;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.icu.util.Calendar;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -17,7 +20,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
-
 public class EmergencyWorker extends Worker {
     public String TAG = "EmergencyWorker";
     public EmergencyWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -49,21 +51,22 @@ public class EmergencyWorker extends Worker {
                 Log.e(TAG, "Parsing non riuscito");
                 return Result.retry();
             }
-            String last_fetched_time = getInputData().getString("updated_time");
+            String last_fetched_time = getLastFetchedTime();
 
             if(!isAlertNew(last_fetched_time, feed.getUpdated())){//da quello che ho gia ritorna subito
                 return Result.success();
             }
-            String targetRegion = getInputData().getString("target_region");
+            String targetRegion = getLastRegione();
             Entry entry = feed.getEntry(targetRegion);
             ultimo_Aggiornamento = entry;
+            String currentTime = Calendar.getInstance().getTime().toString();
             if (entry == null){
                 Log.e(TAG, "Nessuna regione trovata per EmergencyWorker dal parsing");
                 return Result.success(); // Non c'è la regione che cerchiamo
-            } else if (isAlertNew(last_fetched_time,entry.getUpdated())) { //Se l'aggiornamento è piu recente di quello ultimo
+            } else if (isAlertNew(last_fetched_time,entry.getUpdated()) || !isAlertNew(entry.getOnset(), currentTime)) { //Se l'aggiornamento è piu recente di quello ultimo
                 Log.d(TAG, "Nuova allerta disponibile");
                 String allerta = String.format(
-                        "Data: %s\nTipo: %s\nUrgenza: %s\nPrevista Per: %s",
+                        "Data: %s\nTipo: %s\nUrgenza: %s\nPrevista per: %s",
                         castData(entry.getUpdated()),
                         entry.getEvent() != null ? entry.getEvent() : "Non specificato",
                         entry.getUrgency() != null ? entry.getUrgency() : "Ordinaria",
@@ -83,6 +86,12 @@ public class EmergencyWorker extends Worker {
             return Result.retry();
         }
     }
+    /**
+     * @param last_fetched_time a
+     * @param lastTime b
+     * @return true se last_fetched_time e dopo lastTime, false altrimenti
+     *
+     * */
     private boolean isAlertNew(String last_fetched_time, String lastTime){
         try{
             if(last_fetched_time==null || lastTime==null){ // Se l'updateTIme è null c'è errore casting, quindi rifa tutto, se lastTime è null allora è il primo aggiornamento
@@ -110,9 +119,18 @@ public class EmergencyWorker extends Worker {
     private void setEntryUpdate(Entry entry) {
         Gson gson = new Gson();
         String json = gson.toJson(entry);
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("EmergencyAlert", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("ultima_entry", json).apply();
+    }
+
+    private String getLastFetchedTime() {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        return sharedPreferences.getString("last_fetched_time", null);
+    }
+    private String getLastRegione() {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        return sharedPreferences.getString("regione", null);
     }
 
 }

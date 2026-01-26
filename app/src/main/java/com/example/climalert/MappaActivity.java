@@ -199,7 +199,7 @@ public class MappaActivity extends AppCompatActivity {
                             if (lat == null || lon == null) continue;
 
                             String tipo = doc.getString("tipo");
-                            String descrizione = doc.getString("descrizione");
+                            String descrizione = doc.getString("descrizione")+"\nUsername:"+doc.getString("username");
 
                             GeoPoint p = new GeoPoint(lat, lon);
 
