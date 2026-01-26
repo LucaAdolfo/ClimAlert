@@ -1,3 +1,4 @@
+
 package com.example.climalert;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -164,9 +165,9 @@ public class MappaActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
-                Log.d("MappaActivity", "Permesso concesso dall'utente.");
+                Log.d("MappaActivity", "Permesso concesso dall\'utente.");
             } else {
-                Log.w("MappaActivity", "Permesso negato dall'utente.");
+                Log.w("MappaActivity", "Permesso negato dall\'utente.");
             }
         }
     }
@@ -199,7 +200,8 @@ public class MappaActivity extends AppCompatActivity {
                             if (lat == null || lon == null) continue;
 
                             String tipo = doc.getString("tipo");
-                            String descrizione = doc.getString("descrizione")+"<br><b>Username: </b>"+doc.getString("username");
+                            String descrizione = doc.getString("descrizione");
+                            String username = doc.getString("username");
                             com.google.firebase.Timestamp timestamp = doc.getTimestamp("timestamp");
 
                             String dataFormattata = "";
@@ -247,7 +249,26 @@ public class MappaActivity extends AppCompatActivity {
                             // --- Fine modifica ---
 
                             marker.setTitle(tipo != null ? "Evento: " + tipo : "Segnalazione");
-                            marker.setSubDescription(descrizione != null ? "<b>Descrizione: </b>" + descrizione + "<br><b>Effettuata il:</b> " + dataFormattata : "<br><b>Effettuata il:</b> " + dataFormattata);
+
+                            StringBuilder subDesc = new StringBuilder();
+                            if (descrizione != null && !descrizione.isEmpty()) {
+                                subDesc.append("<b>Descrizione: </b>").append(descrizione);
+                            }
+
+                            // Controllo che l'username esista e non sia vuoto prima di aggiungerlo.
+                            if (username != null && !username.isEmpty()) {
+                                if (subDesc.length() > 0) {
+                                    subDesc.append("<br>");
+                                }
+                                subDesc.append("<b>Username: </b>").append(username);
+                            }
+
+                            if (subDesc.length() > 0) {
+                                subDesc.append("<br>");
+                            }
+                            subDesc.append("<b>Effettuata il:</b> ").append(dataFormattata);
+
+                            marker.setSubDescription(subDesc.toString());
 
                             map.getOverlays().add(marker);
                         }
