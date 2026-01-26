@@ -131,7 +131,6 @@ public class MappaAdminActivity extends AppCompatActivity {
 
     private void caricaSegnalazioni() {
         //Prendo la collezione di segnalazioni (impostato limite 50 evitare rallentamnenti)
-        //TODO vedere se metterne di più
         db.collection("segnalazioni")
                 .limit(50)
                 .get()

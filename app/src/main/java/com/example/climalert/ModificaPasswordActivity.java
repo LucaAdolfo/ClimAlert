@@ -86,7 +86,6 @@ public class ModificaPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        //TODO: modifica password nel database e controlla che old password sia corretta e diversa da new
         if(oldPassword.equals(password)){
             Toast.makeText(ModificaPasswordActivity.this, "La nuova password non può essere uguale alla vecchia", Toast.LENGTH_SHORT).show();
             return;

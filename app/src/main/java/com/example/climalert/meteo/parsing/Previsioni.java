@@ -56,7 +56,7 @@ public class Previsioni{
     * -> mer n+4 gennaio
     * @return scadenza
     * Quindi per i primi prossimi 3 giorni c'è la distinzione mattina pomeriggio, i successivi 2 c'è quella generale
-    * //TODO
+    *
     * */
     public Scadenza getMeteogrammi(String name, String data) {
         for (Meteogramma meteogramma : meteogrammi){

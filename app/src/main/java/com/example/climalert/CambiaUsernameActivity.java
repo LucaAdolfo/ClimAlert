@@ -55,7 +55,6 @@ public class CambiaUsernameActivity extends AppCompatActivity {
 
         btnSalva.setOnClickListener(view -> {
             String username_new = edit_username.getText().toString().trim();
-            //TODO: if(username nuovo non è già presente) cambia username nel database
             if(username_new.isEmpty()){
                 Toast.makeText(CambiaUsernameActivity.this, "Compila tutti i campi", Toast.LENGTH_SHORT).show();
                 return;

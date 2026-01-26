@@ -31,14 +31,14 @@ public class AllerteEmergenze {
     private static final String CHANNEL_NAME = "Allerte Emergenze";
     private static final String CHANNEL_DESCRIPTION= "Avvisi per emergenze in tempo reale";
 
-    public static void sendNotification(Context context, String textTitle, String textContent, int notificationId){//TODO non so se bisogna chiedere autorizzazione, cioè nel manifest ci sono le permessi
+    public static void sendNotification(Context context, String textTitle, String textContent, int notificationId){
         //https://developer.android.com/develop/ui/views/notifications/notification-permission?hl=it
         createNotificationChannel(context);
         Intent intent = new Intent(context, com.example.climalert.MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,  0, intent, PendingIntent.FLAG_IMMUTABLE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.notizie)// TODO IMPOSTA
+                .setSmallIcon(R.drawable.notizie)
                 .setContentTitle(textTitle)
                 .setContentText(textContent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(textContent))
