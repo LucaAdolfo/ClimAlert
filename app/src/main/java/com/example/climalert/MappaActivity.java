@@ -199,7 +199,15 @@ public class MappaActivity extends AppCompatActivity {
                             if (lat == null || lon == null) continue;
 
                             String tipo = doc.getString("tipo");
-                            String descrizione = doc.getString("descrizione")+"\nUsername:"+doc.getString("username");
+                            String descrizione = doc.getString("descrizione")+"<br>Username:"+doc.getString("username");
+                            com.google.firebase.Timestamp timestamp = doc.getTimestamp("timestamp");
+
+                            String dataFormattata = "";
+                            if (timestamp != null) {
+                                java.util.Date date = timestamp.toDate();
+                                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault());
+                                dataFormattata = sdf.format(date);
+                            }
 
                             GeoPoint p = new GeoPoint(lat, lon);
 
@@ -238,8 +246,8 @@ public class MappaActivity extends AppCompatActivity {
                             }
                             // --- Fine modifica ---
 
-                            marker.setTitle(tipo != null ? tipo : "Segnalazione");
-                            marker.setSubDescription(descrizione != null ? descrizione : "");
+                            marker.setTitle(tipo != null ? "Evento: " + tipo : "Segnalazione");
+                            marker.setSubDescription(descrizione != null ? descrizione + "<br>Effettuata il: " + dataFormattata : "<br>Effettuata il: " + dataFormattata);
 
                             map.getOverlays().add(marker);
                         }
