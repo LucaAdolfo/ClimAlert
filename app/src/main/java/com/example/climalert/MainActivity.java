@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -122,14 +123,26 @@ public class MainActivity extends AppCompatActivity {
 
         fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
             if (location != null) {
-                ottieniNomeCitta(location.getLatitude(), location.getLongitude());
-                this.regione = ottieniNomeRegione(location.getLatitude(), location.getLongitude());
-                setWorkerEmergenze();
+                aggiornaDatiLocation(location);
             } else {
-                txtPosizione.setText("GPS non disponibile");
-                this.regione = getLastRegione();
+                fusedLocationClient.getCurrentLocation(com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY,
+                        null).addOnSuccessListener(currentLoc->{
+                            if(currentLoc!=null){
+                                aggiornaDatiLocation(currentLoc);
+                            }else{
+                                txtPosizione.setText("GPS non disponibile");
+                                this.regione = getLastRegione();
+                            }
+
+                });
+
             }
         });
+    }
+    private void aggiornaDatiLocation(Location location){
+        ottieniNomeCitta(location.getLatitude(), location.getLongitude());
+        this.regione = ottieniNomeRegione(location.getLatitude(), location.getLongitude());
+        setWorkerEmergenze();
     }
 
     //per trovare città
