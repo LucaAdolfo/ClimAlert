@@ -24,7 +24,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
@@ -430,15 +429,8 @@ public class MainActivity extends AppCompatActivity {
     private void setWorkerEmergenze(){/*Metto worker a fare*/
         //-devo -> prendere preferenze della ultima update e scrivere con un return la preferenza
         //-> ho bisogno regione
-        String regione = this.regione;
-        String last_fetched_time = getLastFetchedTime();
-        Data data = new Data.Builder()
-                .putString("target_region", regione)
-                .putString("updated_time", last_fetched_time)
-                .build();
         PeriodicWorkRequest emergencyWorkRequest =
                 new PeriodicWorkRequest.Builder(EmergencyWorker.class, 30, TimeUnit.MINUTES)
-                        .setInputData(data)
                         .setConstraints(new androidx.work.Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                         .build();
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
@@ -446,20 +438,6 @@ public class MainActivity extends AppCompatActivity {
                 ExistingPeriodicWorkPolicy.KEEP,
                 emergencyWorkRequest
         );
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(emergencyWorkRequest.getId())
-                .observe(this, workInfo -> {
-                    if (workInfo != null) {
-                        Log.d("MainActivity", "Stato del worker cambiato: " + workInfo.getState());
-                    }
-
-                    if (workInfo != null && workInfo.getState() == androidx.work.WorkInfo.State.SUCCEEDED) {
-                        String newUpdateTime = workInfo.getOutputData().getString("new_fetched_time");
-                        if (newUpdateTime != null) {
-                            Log.d("MainActivity", "Worker ha finito! Salvo il nuovo tempo di aggiornamento: " + newUpdateTime);
-                            setTimeUpdate(newUpdateTime);
-                        }
-                    }
-                });
 
     }
     @Override
@@ -477,18 +455,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String getLastFetchedTime() {
-        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
-        return sharedPreferences.getString("last_fetched_time", null);
-    }
-
-    private void setTimeUpdate(String date) {
-        SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("last_fetched_time",date);
-        editor.apply();
-
-    }
     private void setRegioneUpdate(String regione) {
         SharedPreferences sharedPreferences = getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

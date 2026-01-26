@@ -4,11 +4,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.icu.util.Calendar;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -59,11 +57,11 @@ public class EmergencyWorker extends Worker {
             String targetRegion = getLastRegione();
             Entry entry = feed.getEntry(targetRegion);
             ultimo_Aggiornamento = entry;
-            String currentTime = Calendar.getInstance().getTime().toString();
+            String currentTime = OffsetDateTime.now().toString();
             if (entry == null){
                 Log.e(TAG, "Nessuna regione trovata per EmergencyWorker dal parsing");
                 return Result.success(); // Non c'è la regione che cerchiamo
-            } else if (isAlertNew(last_fetched_time,entry.getUpdated()) || !isAlertNew(entry.getOnset(), currentTime)) { //Se l'aggiornamento è piu recente di quello ultimo
+            } else if (isAlertNew(last_fetched_time,entry.getUpdated()) && !isAlertNew(entry.getOnset(), currentTime)) { //Se l'aggiornamento è piu recente di quello ultimo
                 Log.d(TAG, "Nuova allerta disponibile");
                 String allerta = String.format(
                         "Data: %s\nTipo: %s\nUrgenza: %s\nPrevista per: %s",
@@ -74,8 +72,8 @@ public class EmergencyWorker extends Worker {
                 );
                 setEntryUpdate(entry);
                 AllerteEmergenze.sendNotification(getApplicationContext(), "Allerta per "+entry.getAreaDesc(),allerta, entry.getId().hashCode());
-                Data dataoutput= new Data.Builder().putString("new_fetched_time", entry.getUpdated()).build();
-                return Result.success(dataoutput); //C'è qualcosa da aggiornare!
+                setTimeUpdate(entry.getUpdated());
+                return Result.success(); //C'è qualcosa da aggiornare!
             }else{//Non ha trovato nulla da aggiornare!
                 Log.d(TAG, "Non ci sono nuovi aggiornamenti");
                 return Result.success();
@@ -89,7 +87,7 @@ public class EmergencyWorker extends Worker {
     /**
      * @param last_fetched_time a
      * @param lastTime b
-     * @return true se last_fetched_time e dopo lastTime, false altrimenti
+     * @return true se b e dopo a, false altrimenti
      *
      * */
     private boolean isAlertNew(String last_fetched_time, String lastTime){
@@ -130,7 +128,14 @@ public class EmergencyWorker extends Worker {
     }
     private String getLastRegione() {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
-        return sharedPreferences.getString("regione", null);
+        return sharedPreferences.getString("regione", "Veneto");
+    }
+    private void setTimeUpdate(String date) {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("EmergencyAlert", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("last_fetched_time",date);
+        editor.apply();
+
     }
 
 }
