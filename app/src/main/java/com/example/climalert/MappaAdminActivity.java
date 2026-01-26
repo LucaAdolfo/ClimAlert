@@ -96,7 +96,6 @@ public class MappaAdminActivity extends AppCompatActivity {
                         map.getOverlays().add(userMarker);
                         userMarker.setTitle("You");
                         userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                        //userMarker.getIcon();//TODO
 
                         android.graphics.drawable.Drawable iconaCustom = ContextCompat.getDrawable(MappaAdminActivity.this, R.drawable.ic_location);
                         if (iconaCustom != null) {
@@ -143,9 +142,17 @@ public class MappaAdminActivity extends AppCompatActivity {
                         Double lon = doc.getDouble("lon");
                         if (lat == null || lon == null) continue;
 
-                        String tipo = doc.getString("tipo");
                         String stato = doc.getString("stato");
-                        String descrizione = doc.getString("descrizione");
+                        String tipo = doc.getString("tipo");
+                        String descrizione = doc.getString("descrizione")+"<br><b>Username: </b>"+doc.getString("username");
+                        com.google.firebase.Timestamp timestamp = doc.getTimestamp("timestamp");
+
+                        String dataFormattata = "";
+                        if (timestamp != null) {
+                            java.util.Date date = timestamp.toDate();
+                            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault());
+                            dataFormattata = sdf.format(date);
+                        }
 
                         GeoPoint p = new GeoPoint(lat, lon);
 
@@ -172,8 +179,8 @@ public class MappaAdminActivity extends AppCompatActivity {
                             marker.setIcon(iconaCustom);
                         }
 
-                        marker.setTitle(tipo != null ? tipo : "Segnalazione");
-                        marker.setSubDescription(descrizione != null ? descrizione : "");
+                        marker.setTitle(tipo != null ? "Evento: " + tipo : "Segnalazione");
+                        marker.setSubDescription(descrizione != null ? "<b>Descrizione: </b>" + descrizione + "<br><b>Effettuata il:</b> " + dataFormattata : "<br><b>Effettuata il:</b> " + dataFormattata);
 
                         map.getOverlays().add(marker);
                     }

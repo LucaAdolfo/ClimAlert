@@ -20,8 +20,8 @@
         android:layout_height="0dp"
         android:background="@drawable/rounded_bottom_header"
         android:gravity="center_vertical|start"
-        android:paddingStart="140dp"
-        android:paddingEnd="50dp"
+        android:paddingStart="110dp"
+        android:paddingEnd="80dp"
         android:text="@string/benvenuto"
         android:textSize="40sp"
         android:textStyle="bold"
@@ -29,24 +29,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/btnImpostazioni"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="20dp"
-        android:background="@drawable/settings_button_background"
-        android:contentDescription="@string/apri_impostazioni"
-        android:elevation="13dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_settings"
-        app:tint="#000000"
-
-        app:layout_constraintTop_toTopOf="@id/idTitle"
-        app:layout_constraintBottom_toBottomOf="@id/idTitle"
-
-        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnLogout"
